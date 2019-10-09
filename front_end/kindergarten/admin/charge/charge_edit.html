@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<link rel="stylesheet" href="../../css/font.css">
+		<link rel="stylesheet" href="../../css/xadmin.css">
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/xadmin.js"></script>
+	</head>
+
+	<body>
+		<div class="x-body" id="main">
+			<div class="layui-form">
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						学费
+					</label>
+					<div class="layui-input-inline">
+						<input type="number" v-model="inputtext.schooling" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						书费
+					</label>
+					<div class="layui-input-inline">
+						<input type="number" v-model="inputtext.bookMoney" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						伙食费
+					</label>
+					<div class="layui-input-inline">
+						<input type="number" v-model="inputtext.boardAges" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						住宿费
+					</label>
+					<div class="layui-input-inline">
+						<input type="number"  v-model="inputtext.quarterage" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						缴费期限
+					</label>
+					<div class="layui-input-inline">
+						<input id="dayly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						收费学年
+					</label>
+					<div class="layui-input-inline">
+						<input id="year" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_repass" class="layui-form-label">
+					</label>
+					<button class="layui-btn" lay-filter="add" v-on:click="submit">
+						修改
+					</button>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="../../js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="../../js/moment.min.js"></script>
+		<script type="text/javascript" src="../../js/vue-main.js"></script>
+
+		<script>
+			layui.use('laydate', function() {
+				var laydate = layui.laydate;
+				//执行一个laydate实例
+				laydate.render({
+					elem: '#dayly', //指定元素
+					trigger: 'click'
+				});
+				laydate.render({
+					elem: '#year', //指定元素
+					trigger: 'click'
+				});
+			});
+			var id = GetQueryString('id');
+			var vue = new Vue({
+				el: "#main",
+				data: {
+					inputtext: {},
+					parents: [],
+				},
+				methods: {
+					getStudent: function(pageIndex) {
+						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
+						var _this = this;
+						axios.get('/payStandard/findById/' + id).then(function(res) {
+							console.info(res);
+							_this.inputtext = res.data.data;
+							var year = moment(_this.inputtext.year).format("YYYY-MM-DD");
+							var paymentDeadline = moment(_this.inputtext.paymentDeadline).format("YYYY-MM-DD");
+							$("#dayly").val(paymentDeadline);
+							$("#year").val(year);
+						})
+					},
+					submit: function() {
+						var _this = this;
+						if (_this.inputtext.schooling == undefined) {
+							layer.alert("学费不能为空", {
+								icon: 5
+							});
+							return;
+						}
+						if (_this.inputtext.bookMoney == undefined) {
+							layer.alert("书费不能为空", {
+								icon: 5
+							});
+							return;
+						}
+						if (_this.inputtext.boardAges == undefined) {
+							layer.alert("伙食费不能为空", {
+								icon: 5
+							});
+							return;
+						}
+						if (_this.inputtext.quarterage == undefined) {
+							layer.alert("住宿费不能为空", {
+								icon: 5
+							});
+							return;
+						}
+						if ($("#paymentDeadline").val() == "") {
+							layer.alert("缴费期限不能为空", {
+								icon: 5
+							});
+							return;
+						}
+						if ($("#year").val() == "") {
+							layer.alert("收费学年不能为空", {
+								icon: 5
+							});
+							return;
+						}
+						_this.inputtext.year = $("#year").val() == "" ? null : $("#year").val();
+						_this.inputtext.paymentDeadline = $("#dayly").val() == "" ? null : $("#dayly").val();
+						axios.post('/payStandard/update/' + id, _this.inputtext)
+							.then(function(res) {
+								console.info(res)
+								if (res.data.code == 400) {
+									layer.alert(res.data.message, {
+										icon: 5
+									});
+								} else {
+									layer.alert("修改成功", {
+										icon: 6
+									}, function() {
+										var index = parent.layer.getFrameIndex(window.name);
+										parent.layer.close(index);
+									});
+								}
+							})
+					}
+				},
+				created: function() {
+					this.getStudent();
+				}
+			})
+		</script>
+	</body>
+
+</html>

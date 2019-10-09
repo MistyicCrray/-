@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+		<link rel="stylesheet" href="../../css/font.css">
+		<link rel="stylesheet" href="../../css/xadmin.css">
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/xadmin.js"></script>
+	</head>
+
+	<body>
+		<div class="x-nav">
+			<span class="layui-breadcrumb">
+				<a href="">首页</a>
+				<a href="">用户管理</a>
+				<a>
+					<cite>用户列表</cite>
+				</a>
+			</span>
+			<a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);"
+			 title="刷新">
+				<i class="layui-icon" style="line-height:30px">ဂ</i></a>
+		</div>
+		<div class="x-body" id="main">
+			<div class="layui-row">
+				<div class="layui-form layui-col-md12 x-so">
+					<input type="text" v-model="inputtext.loginName" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+					<button class="layui-btn" v-on:click="getUsers(1)"><i class="layui-icon">&#xe615;</i></button>
+				</div>
+			</div>
+			<xblock>
+				<button class="layui-btn" onclick="x_admin_show('添加用户','user_add.html')"><i class="layui-icon"></i>添加</button>
+				<span class="x-right" style="line-height:40px">共有数据：{{total}} 条</span>
+			</xblock>
+			<table class="layui-table">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>登录名</th>
+						<th>联系方式</th>
+						<th>角色</th>
+						<th>用户地址</th>
+						<th>创建时间</th>
+						<th>状态</th>
+						<th>操作</th>
+				</thead>
+				<tbody>
+					<tr v-for="item,index in users">
+						<td>{{index + 1}}</td>
+						<td>{{item.loginName}}</td>
+						<td>{{item.contract}}</td>
+						<td>{{item.userType | optStatusFilter}}</td>
+						<td>{{item.address}}</td>
+						<td>{{item.createTime | dateFilter}}</td>
+						<td class="td-status" v-if="item.state == 0">
+							<span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span></td>
+						<td class="td-status" v-if="item.state == 1">
+							<span class="layui-btn layui-btn-danger layui-btn-mini">已冻结</span></td>
+						<td class="td-manage">
+							<a v-if="item.state == 1" v-on:click="update(item.id, item.state)" href="javascript:;" title="启用">
+								<i class="layui-icon">&#xe601;</i>
+							</a>
+							<a v-if="item.state == 0" v-on:click="update(item.id, item.state)" href="javascript:;" title="冻结">
+								<i class="layui-icon">&#xe601;</i>
+							</a>
+							<a title="编辑" v-on:click="edituser(item.id)" href="javascript:;">
+								<i class="layui-icon">&#xe642;</i>
+							</a>
+							<a title="重置密码" v-on:click="resetP(item.id)" href="javascript:;">
+								<i class="layui-icon">&#xe643;</i>
+							</a>
+							<a title="删除" v-on:click="deleteU(item.id)" href="javascript:;">
+								<i class="layui-icon">&#xe640;</i>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="page">
+				<a class="prev" href="javascript:void(0)" v-on:click="prePage">&lt;&lt;</a>
+				<template v-for="(item,index) in pages">
+					<template v-if="pageNum!=2&&pages!=2&&pages!=1 && pageNum==1 && item<pageNum+5 && item>pageNum-5">
+						<a href="javascript:void(0)" v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
+					</template>
+					<template v-if="pageNum==2 && item<pageNum+4 && item>pageNum-4">
+						<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
+					</template>
+					<template v-if="pageNum>2 && item<pageNum+3 && item>pageNum-3 && pageNum<pages-1">
+						<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
+					</template>
+					<template v-if="pageNum!=2&&pageNum==pages-1 && item>pageNum-4">
+						<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
+					</template>
+					<template v-if="pageNum!=2&&pageNum==pages && item>pageNum-5">
+						<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
+					</template>
+				</template>
+				<a class="next" href="javascript:void(0)" v-on:click="nextPage">&gt;&gt;</a>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="../../js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="../../js/moment.min.js"></script>
+		<script type="text/javascript" src="../../js/vue-main.js"></script>
+		<script>
+			var optionsUserType = ['管理员', '家长', '教师', '园长', '厨师', '卫生管理员'];
+			var vue = new Vue({
+				el: "#main",
+				data: {
+					users: "",
+					pageSize: 5,
+					total: 0,
+					pages: 0,
+					pageNum: 1,
+					inputtext: {},
+					editInp: {}
+				},
+				methods: {
+					getUsers: function(pageIndex) {
+						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
+						var _this = this;
+						axios.get('/user/findAllUser', {
+							params: {
+								loginName: _this.inputtext.loginName == "" ? null : _this.inputtext.loginName,
+								pageNum: pageIndex,
+								size: _this.pageSize
+							}
+						}).then(function(res) {
+							if (res.status == 202) {
+								alert("无权访问");
+								return;
+							}
+							_this.users = res.data.data.rows;
+							_this.pageNum = pageIndex;
+							_this.total = res.data.data.total;
+							_this.pages = Math.ceil(_this.total / _this.pageSize);
+						})
+					},
+					pageClick: function(page) {
+						this.getUsers(page);
+					},
+					prePage: function() {
+						this.pageNum--;
+						if (this.pageNum < 1) {
+							this.pageNum = 1;
+							return;
+						}
+						this.getUsers(this.pageNum);
+					},
+					nextPage: function() {
+						this.pageNum++;
+						if (this.pageNum > this.pages) {
+							this.pageNum = this.pages;
+							return;
+						}
+						this.getUsers(this.pageNum);
+					},
+					logout: function() {
+						logout();
+						location.href = "login.html";
+					},
+					edit: function(id) {
+						var _this = this;
+						layer.open({
+							type: 2,
+							title: '修改轮播图信息',
+							shadeClose: true,
+							closeBtn: 1,
+							scrollbar: true,
+							area: ['600px', '400px'],
+							content: ['banner-edit.html?id=' + id],
+							end: function() {
+								_this.getBanners();
+							}
+						})
+					},
+					deleteU: function(id) {
+						var _this = this;
+						layer.confirm("是否删除该用户？", {
+							btn: ['确认', '取消'] //按钮
+						}, function() {
+							axios.post('/user/deleteUser/' + id).then(function(res) {
+								if (res.data.code == 200) {
+									layer.alert('删除成功', {
+										icon: 6
+									});
+									_this.getUsers(1);
+								} else {
+									layer.alert(res.data.message, {
+										icon: 5
+									});
+								}
+							});
+						});
+					},
+					update: function(id, type) {
+						var _this = this;
+						if (type == 0) {
+							_this.editInp.state = 1;
+							layer.confirm("是否冻结该用户？", {
+								btn: ['确认', '取消'] //按钮
+							}, function() {
+								axios.post('/user/updateUser/' + id, _this.editInp).then(function(res) {
+									if (res.data.code == 200) {
+										layer.alert('冻结用户成功', {
+											icon: 6
+										});
+										_this.getUsers(1);
+									} else {
+										layer.alert(res.data.message, {
+											icon: 5
+										});
+									}
+								});
+							});
+						} else {
+							_this.editInp.state = 0;
+							layer.confirm("是否解冻该用户？", {
+								btn: ['确认', '取消'] //按钮
+							}, function() {
+								axios.post('/user/updateUser/' + id, _this.editInp).then(function(res) {
+									if (res.data.code == 200) {
+										layer.alert('解冻用户成功', {
+											icon: 6
+										});
+										_this.getUsers(1);
+									} else {
+										layer.alert(res.data.message, {
+											icon: 5
+										});
+									}
+								});
+							});
+						}
+
+					},
+					edituser: function(id) {
+						var _this = this;
+						layer.open({
+							type: 2,
+							title: '修改用户信息',
+							shadeClose: true,
+							closeBtn: 1,
+							scrollbar: true,
+							area: ['600px', '400px'],
+							content: ['user_edit.html?id=' + id],
+							end: function() {
+								_this.getUsers();
+							}
+						})
+					},
+					resetP: function(id) {
+						var _this = this;
+						_this.editInp.password = 123456;
+						layer.confirm("是否重置该用户密码？（重置后为123456）", {
+							btn: ['确认', '取消'] //按钮
+						}, function() {
+							axios.post('/user/updateUser/' + id, _this.editInp).then(function(res) {
+								if (res.data.code == 200) {
+									layer.alert('重置密码成功', {
+										icon: 6
+									});
+									_this.getUsers(1);
+								} else {
+									layer.alert(res.data.message, {
+										icon: 5
+									});
+								}
+							});
+						});
+					}
+				},
+				created: function() {
+					this.getUsers();
+				},
+				filters: {
+					dateFilter: function(value) {
+						if (!value) return '';
+						var date = moment(value).toDate();
+						return moment(date).format("YYYY-MM-DD HH:ss:mm");
+					},
+					optStatusFilter: function(value) {
+						return optionsUserType[value];
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

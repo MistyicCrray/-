@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+		<link rel="stylesheet" href="../../css/font.css">
+		<link rel="stylesheet" href="../../css/xadmin.css">
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/xadmin.js"></script>
+	</head>
+
+	<body>
+		<div class="x-body" id="main">
+			<xblock>
+				<button class="layui-btn" onclick="x_admin_show('添加学生信息','user_add.html')"><i class="layui-icon"></i>添加</button>
+			</xblock>
+			<table class="layui-table">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>学生姓名</th>
+						<th>联系方式</th>
+						<th>居住地址</th>
+						<th>入园时间</th>
+						<th>学号</th>
+						<th>父亲电话</th>
+						<th>父亲姓名</th>
+						<th>母亲电话</th>
+						<th>母亲姓名</th>
+						<th>出生日期</th>
+						<th>性别</th>
+						<th>班别</th>
+				</thead>
+				<tbody>
+					<tr v-for="item,index in childrens">
+						<td>{{index + 1}}</td>
+						<td>{{item.s_name}}</td>
+						<td>{{item.s_contract}}</td>
+						<td>{{item.s_address}}</td>
+						<td>{{item.s_inDate}}</td>
+						<td>{{item.s_studentId}}</td>
+						<td>{{item.s_fatherTel}}</td>
+						<td>{{item.s_fatherName}}</td>
+						<td>{{item.s_matherTel}}</td>
+						<td>{{item.s_matherName}}</td>
+						<td>{{item.s_birthday}}</td>
+						<td>{{item.s_gender | optStatusFilter}}</td>
+						<td>{{item.s_classId}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="../../js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="../../js/moment.min.js"></script>
+		<script type="text/javascript" src="../../js/vue-main.js"></script>
+		<script>
+			var id = GetQueryString('id');
+			var gender = ['男','女'];
+			var vue = new Vue({
+				el: "#main",
+				data: {
+					childrens: "",
+					inputtext: {},
+					editInp: {}
+				},
+				methods: {
+					getParents: function() {
+						var _this = this;
+						axios.get('/parents/findParentChils/' + id).then(function(res) {
+							console.info(res.data.data.rows[0].s_id);
+							if(res.data.data.rows[0].s_id != "" || res.data.data.rows[0].s_id != undefined) {
+								_this.childrens = res.data.data.rows;
+							}
+						})
+					}
+				},
+				created: function() {
+					this.getParents();
+				},
+				filters: {
+					dateFilter: function(value) {
+						if (!value) return '';
+						var date = moment(value).toDate();
+						return moment(date).format("YYYY-MM-DD HH:ss:mm");
+					},
+					optStatusFilter: function(value) {
+						return gender[value];
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>后台登录</title>
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		<link rel="stylesheet" href="css/font.css">
+		<link rel="stylesheet" href="css/xadmin.css">
+		<script src="js/jquery.min.js"></script>
+		<script src="js/xadmin.js"></script>
+		<script src="lib/layui/layui.js"></script>
+	</head>
+
+	<body class="login-bg">
+
+		<div class="login layui-anim layui-anim-up" id="app">
+			<div class="message">管理登录</div>
+			<div id="darkbannerwrap"></div>
+			<form method="post" class="layui-form">
+				<input name="username" placeholder="用户名" type="text" class="layui-input" v-model="inputtext.loginName">
+				<hr class="hr15">
+				<input name="password" placeholder="密码" type="password" class="layui-input" v-model="inputtext.password">
+				<hr class="hr15">
+				<input value="登录" lay-filter="login" style="width:100%;" type="button" v-on:click="submit" />
+				<hr class="hr20">
+			</form>
+		</div>
+		<script src="js/vue-2.5.17.min.js"></script>
+		<script src="js/axios-0.18.min.js"></script>
+		<script src="js/vue-main.js"></script>
+		<script type="text/javascript">
+			var app = new Vue({
+				el: '#app',
+				data: {
+					user: {},
+					inputtext: {
+						loginName: '',
+						password: ''
+					},
+				},
+				// 在 `methods` 对象中定义方法
+				methods: {
+					submit: function() {
+						var _this = this;
+						if(_this.inputtext.loginName == "") {
+							layer.alert('请输入用户名', {
+								icon: 5
+							});
+							return;
+						}
+						if(_this.inputtext.password == "") {
+							layer.alert('请输入密码', {
+								icon: 5
+							});
+							return;
+						}
+						axios.post('/user/login', _this.inputtext)
+							.then(function(response) {
+								console.info(response.data.code);
+								if (response.data.code == 200) {
+									sessionStorage.setItem("userId", response.data.data.userInfo.id);
+									sessionStorage.setItem("username", response.data.data.userInfo.name);
+									sessionStorage.setItem("accessToken", response.data.data.accessToken);
+									sessionStorage.setItem("userType", response.data.data.userInfo.userType);
+									layer.alert("登录成功");
+									window.location.href = 'admin/index.html';
+								} else {
+									layer.alert(response.data.message);
+								}
+
+							})
+							.catch(function(err) {
+
+							});
+					}
+				},
+				created: function() {}
+			})
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<link rel="stylesheet" href="../../css/font.css">
+		<link rel="stylesheet" href="../../css/xadmin.css">
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/xadmin.js"></script>
+	</head>
+	<style type="text/css">
+		@font-face {
+			font-family: "iconfont";
+			src: url('iconfont.eot?t=1569825527485');
+			src: url('iconfont.eot?t=1569825527485#iefix') format('embedded-opentype'),
+				url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAMoAAsAAAAABuQAAALZAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCCcAqBcIFtATYCJAMICwYABCAFhG0HMBsTBsgOJRGRwACgHodAPPy3H+2++bOqSTVuFLO8iIdonvCSiUQ7neSJhJfAj3Z9b77Z5pOYmU0WzuablXh3FcDqKoC9pcDhtAsUyB1QbvccPhcwsDTA/zAKJJA+UADcMHbBCzxNoFKHYNxCbnE1WMjsSYG4IpfyYFHwyTJLlgulDSuzeAKmytMjo2sAHkffj38QGRYkJQW7bOdcjgTSf9Y4acY3/w9rDgjAX84Cto4CY0AmDhpjW4wFoxmrjJnoAccqDn7W/P8fGMRR/zxRyi6sBm2Q90x8T/CohQnkpHcbuDDp9kgTzn1L92J31dY+PLbiqqIylmYBKlU5IH48sPZdcXtQPVt87fDe5sWcGOuHdavu92uslnfudr973m91VVhyuVV8bfxe7Y6HfrtP+iTU3lFNcvvx29QmyzndXfBpGLBdPia8Hn2NR6Lcyx+PPhY2uOA8zpWkNHJxX18uFddx5U07uGKofzV/2chx05rpD5zDSbwPd291/u+zPzXzSW88oqMSv76bmwa4OpqX8elo+dX3P76vBEE6DhQfjD795N+4u/mtrc0++Wt5VQbfXl/6HmmyYQ7Kb8Ue/FL+wJZsCG19yhq/0ZFsT5qYUKkS/2FXoxdTVS33nwrlWt7CUaY9Q6FcHzFTx1CiyjhKlZtGpVF566s0oYxFrsCICYBQ7zCSWm9QqHedmKnPUaLVW5SqD2NUOgrnHasMhNwqi2KeYQkSepBc1GqIa2RWcXEllnaoeJoXRvRaTA3yIIoIDS8n87AG0yXmGDqlkYwRRKhWjXLBeVil0iId1SqwyEJljOkSw8JI05VCRa0arMyjMB6DSSCCHoicSEuDBN0Zq8rnK2FSHVR4tKOizlkLowzk/SMRQoUPIObJNIMqHuUSg05SkRiGQAhKSw3JBcMwFRUtRNc8TAETMaFkEyI6icKcTmSoLHR7hfoHclkNtjqFM6hQeqKS6/geAAAAAA==') format('woff2'),
+				url('iconfont.woff?t=1569825527485') format('woff'),
+				url('iconfont.ttf?t=1569825527485') format('truetype'),
+				url('iconfont.svg?t=1569825527485#iconfont') format('svg');
+		}
+
+		.iconfont {
+			font-family: "iconfont" !important;
+			font-size: 50px;
+			font-style: normal;
+			color: #007DDB;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+		}
+
+		.icon-alipay:before {
+			content: "\e60d";
+		}
+	</style>
+	<body>
+		<div class="layui-container fly-marginTop" id="main">
+			<div class="fly-panel layui-text">
+				<div class="fly-panel-title fly-filter">缴费订单确认</div>
+				<div class="fly-panel-main">
+					<div class="layui-form">
+						<div class="layui-form-item"> <label class="layui-form-label">订单信息：</label>
+							<div class="layui-form-mid" style="float: none;">
+								<a href="javascript:void(0)" target="_blank">
+									{{order.student.name}}同学{{order.payStandard.year | dateFilter}}年园内收费，请您于{{order.payStandard.paymentDeadline | dateFilter}}前进行缴费，过期后将不能进行在线缴费
+								</a>
+							</div>
+						</div>
+						<div class="layui-form-item"> <label class="layui-form-label">费用详情：</label>
+							<div class="layui-input-block">
+								<button type="button" class="fly-form-btn layui-btn layui-btn-primary" data-id="3" data-type="change"
+								 data-required="true">学费：{{order.payStandard.schooling/100}}元</button>
+								<button type="button" class="fly-form-btn layui-btn layui-btn-primary" data-id="4" data-type="change"
+								 data-required="true">书费：{{order.payStandard.bookMoney/100}}元</button>
+								<button type="button" class="fly-form-btn layui-btn layui-btn-primary layui-this" data-id="8" data-type="change"
+								 data-required="true">伙食费：{{order.payStandard.boardAges/100}}元</button>
+								<button type="button" class="fly-form-btn layui-btn layui-btn-primary layui-this" data-id="8" data-type="change"
+								 data-required="true">住宿费：{{order.payStandard.quarterage/100}}元</button>
+							</div>
+						</div>
+						<div class="layui-form-item"> <label class="layui-form-label">所需费用：</label>
+							<div class="layui-input-block">
+								<div class="layui-form-mid" id="LAY_price" style="font-size: 23px; color: #FF5722;">￥{{order.payStandard.quarterage/100 + order.payStandard.boardAges/100 + order.payStandard.bookMoney/100 + order.payStandard.schooling/100}}</div>
+								<div class="layui-clear"></div>
+								<div class="fly-bill-tips">
+									<div class="layui-text" style="color: #FF5722; font-size: 12px;">
+										<ul style="padding-top: 0; padding-bottom: 0;">
+											<li style="margin-top: 0;">请您核对好订单信息，以免缴费失误</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">支付方式：</label>
+							<div class="layui-input-block">
+								<input type="radio" name="pay_type" value="alipay">
+								<div style="padding-top: 10px; float: left;"><i class="iconfont icon-alipay" title="支付宝"></i></div>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<div class="layui-input-block">
+								<button class="layui-btn layui-btn-danger" v-on:click="check">立即提交</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="../../js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="../../js/moment.min.js"></script>
+		<script type="text/javascript" src="../../js/vue-main.js"></script>
+		<script>
+			var id = GetQueryString("id");
+			var vue = new Vue({
+				el: "#main",
+				data: {
+					order: {},
+				},
+				methods: {
+					findOrder: function() {
+						console.info(id)
+						var _this = this;
+						axios.get('/order/findById/' + id).then(function(res) {
+							console.info(res)
+							_this.order = res.data.data;
+						})
+					},
+					check: function() {
+						var _this = this;
+						var total = parseInt(_this.order.payStandard.quarterage) / 100 + parseInt(_this.order.payStandard.boardAges) /
+							100 +
+							parseInt(_this.order.payStandard.bookMoney) / 100 + parseInt(_this.order.payStandard.schooling) / 100;
+						top.location.href = '/manager/alipay/pay?subject=' +
+							_this.order.student.name + '同学' + _this.order.payStandard.year + '年园内收费' + "&payment=" +
+							total + "&orderId=" + id;
+					}
+				},
+				created: function() {
+					this.findOrder();
+				},
+				filters: {
+					dateFilter: function(value) {
+						if (!value) return '';
+						var date = moment(value).toDate();
+						return moment(date).format("YYYY-MM-DD");
+					},
+					optStatusFilter: function(value) {
+						return gender[value];
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

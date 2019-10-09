@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<link rel="stylesheet" href="../../css/font.css">
+		<link rel="stylesheet" href="../../css/xadmin.css">
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/xadmin.js"></script>
+	</head>
+
+	<body>
+		<div class="x-body" id="main">
+			<div class="layui-form">
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						早餐菜式
+					</label>
+					<div class="layui-input-inline">
+						<input v-for="item in childrens" type="checkbox" name="breakfast_food" v-bind:value="item.id" v-bind:title="item.name">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						早餐价格
+					</label>
+					<div class="layui-input-inline">
+						<input type="text" v-model="inputtext.breakfastMoney" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						午餐菜式
+					</label>
+					<div class="layui-input-inline">
+						<input v-for="item in childrens" type="checkbox" name="lunch_food" v-bind:value="item.id" v-bind:title="item.name">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						午餐价格
+					</label>
+					<div class="layui-input-inline">
+						<input type="text" v-model="inputtext.lunchMoney" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						晚餐菜式
+					</label>
+					<div class="layui-input-inline">
+						<input v-for="item in childrens" type="checkbox" name="dinner_food" v-bind:value="item.id" v-bind:title="item.name">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						晚餐价格
+					</label>
+					<div class="layui-input-inline">
+						<input type="text" v-model="inputtext.dinnerMoney" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						菜单日期
+					</label>
+					<div class="layui-input-inline">
+						<input id="dayly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_repass" class="layui-form-label">
+					</label>
+					<button class="layui-btn" lay-filter="add" v-on:click="submit">
+						保存
+					</button>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="../../js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="../../js/moment.min.js"></script>
+		<script type="text/javascript" src="../../js/vue-main.js"></script>
+		<script>
+			layui.use('laydate', function() {
+				var laydate = layui.laydate;
+				laydate.render({
+					elem: '#dayly',
+					trigger: 'click'
+				});
+			});
+			var vue = new Vue({
+				el: "#main",
+				data: {
+					childrens: "",
+					pageSize: 5,
+					total: 0,
+					pages: 0,
+					pageNum: 1,
+					inputtext: {
+						breakfastFoodId: '',
+						lunchFoodId: '',
+						dinnerFoodId: ''
+					},
+					editInp: {},
+					breakfastFoodId: [],
+					lunchFoodId: [],
+					dinnerFoodId: [],
+					breakfastFoodName: [],
+					lunchFoodName: [],
+					dinnerFoodName: []
+				},
+				methods: {
+					getStudent: function(pageIndex) {
+						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
+						var _this = this;
+						axios.get('/dishes/find', {
+							params: {
+								name: _this.inputtext.name == "" ? null : _this.inputtext.name,
+								contract: _this.inputtext.name == "" ? null : _this.inputtext.name,
+								pageNum: pageIndex,
+								size: _this.pageSize
+							}
+						}).then(function(res) {
+							console.info(res);
+							if (res.status == 202) {
+								alert("无权访问");
+								return;
+							}
+							_this.childrens = res.data.data.rows;
+							_this.pageNum = pageIndex;
+							_this.total = res.data.data.total;
+							_this.pages = Math.ceil(_this.total / _this.pageSize);
+						})
+					},
+					submit: function() {
+						var _this = this;
+						$('input[name="breakfast_food"]:checked').each(function() { //遍历每一个名字为interest的复选框，其中选中的执行函数
+							_this.breakfastFoodId.push($(this).val()); //将选中的值添加到数组chk_value中
+							_this.breakfastFoodName.push($(this).attr('title'))
+						});
+						$('input[name="lunch_food"]:checked').each(function() { //遍历每一个名字为interest的复选框，其中选中的执行函数
+							_this.lunchFoodId.push($(this).val()); //将选中的值添加到数组chk_value中
+							_this.lunchFoodName.push($(this).attr('title'))
+						});
+						$('input[name="dinner_food"]:checked').each(function() { //遍历每一个名字为interest的复选框，其中选中的执行函数
+							_this.dinnerFoodId.push($(this).val()); //将选中的值添加到数组chk_value中
+							_this.dinnerFoodName.push($(this).attr('title'))
+						});
+						_this.inputtext.breakfastFoodId = _this.breakfastFoodId.join(',');
+						_this.inputtext.lunchFoodId = _this.lunchFoodId.join(',');
+						_this.inputtext.dinnerFoodId = _this.dinnerFoodId.join(',');
+
+						_this.inputtext.breakfastFood = _this.breakfastFoodName.join(',');
+						_this.inputtext.lunchFood = _this.lunchFoodName.join(',');
+						_this.inputtext.dinnerFood = _this.dinnerFoodName.join(',');
+
+						_this.inputtext.dishesDate = $("#dayly").val() == "" ? null : $("#dayly").val();
+						if (_this.inputtext.breakfastFoodId == undefined) {
+							layer.alert("请选择早餐菜式", {
+								icon: 5
+							});
+							return;
+						}
+						if (_this.inputtext.breakfastMoney == undefined) {
+							layer.alert("早餐价格不能为空", {
+								icon: 5
+							});
+							return;
+						}
+						if (_this.inputtext.lunchFoodId == undefined) {
+							layer.alert("请选择午餐菜式", {
+								icon: 5
+							});
+							return;
+						}
+						if (_this.inputtext.lunchMoney == undefined) {
+							layer.alert("午餐价格不能为空", {
+								icon: 5
+							});
+							return;
+						}
+						if (_this.inputtext.dinnerFoodId == undefined) {
+							layer.alert("请选择晚餐菜式", {
+								icon: 5
+							});
+							return;
+						}
+						if (_this.inputtext.dinnerMoney == undefined) {
+							layer.alert("晚餐价格不能为空", {
+								icon: 5
+							});
+							return;
+						}
+						if (_this.inputtext.breakfastFoodId == undefined) {
+							layer.alert("请选择日期", {
+								icon: 5
+							});
+							return;
+						}
+						axios.post('/dishesDaily/add', _this.inputtext)
+							.then(function(res) {
+								console.info(res)
+								if (res.data.code == 400) {
+									layer.alert(res.data.message, {
+										icon: 5
+									});
+								} else {
+									layer.alert("增加成功", {
+										icon: 6
+									}, function() {
+										var index = parent.layer.getFrameIndex(window.name);
+										parent.layer.close(index);
+									});
+								}
+							})
+					}
+
+				},
+				created: function() {
+					this.getStudent();
+				},
+				filters: {
+					dateFilter: function(value) {
+						if (!value) return '';
+						var date = moment(value).toDate();
+						return moment(date).format("YYYY-MM-DD");
+					},
+					optStatusFilter: function(value) {
+						return gender[value];
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

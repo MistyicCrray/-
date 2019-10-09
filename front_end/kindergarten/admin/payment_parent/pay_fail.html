@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+		<link rel="stylesheet" href="../../css/font.css">
+		<link rel="stylesheet" href="../../css/xadmin.css">
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/xadmin.js"></script>
+	</head>
+
+	<body>
+		<div class="layui-container fly-marginTop">
+			<div class="fly-panel layui-text">
+				<div class="fly-panel-title fly-filter">缴费订单确认</div>
+				<div class="fly-panel-main">
+					<form class="layui-form" action="/order/buy/">
+						<div class="layui-form-item"> <label class="layui-form-label">订单信息：</label>
+							<div class="layui-form-mid" style="float: none;">
+								<a href="javascript:void(0)" target="_blank">
+									2018年缴费，请您在2018年9月1号之前进行缴费，过期后需要到园内上交费用
+								</a>
+							</div>
+						</div>
+						<div class="layui-form-item"> <label class="layui-form-label">费用详情：</label>
+							<div class="layui-input-block"> <button type="button" class="fly-form-btn layui-btn layui-btn-primary" data-id="3"
+								 data-type="change" data-required="true">学费：200元</button> <button type="button" class="fly-form-btn layui-btn layui-btn-primary"
+								 data-id="4" data-type="change" data-required="true">书费：50元</button> <button type="button" class="fly-form-btn layui-btn layui-btn-primary layui-this"
+								 data-id="8" data-type="change" data-required="true">伙食费：600元</button> <button type="button" class="fly-form-btn layui-btn layui-btn-primary layui-this"
+								 data-id="8" data-type="change" data-required="true">住宿费：200元</button> </div>
+						</div>
+						<div class="layui-form-item"> <label class="layui-form-label">所需费用：</label>
+							<div class="layui-input-block">
+								<div class="layui-form-mid" id="LAY_price" style="font-size: 23px; color: #FF5722;">￥2600</div>
+								<div class="layui-clear"></div>
+								<div class="fly-bill-tips">
+									<div class="layui-text" style="color: #FF5722; font-size: 12px;">
+										<ul style="padding-top: 0; padding-bottom: 0;">
+											<li style="margin-top: 0;">请您核对好订单信息，以免缴费失误</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="layui-form-item"> <label class="layui-form-label">支付方式：</label>
+							<div class="layui-input-block"> <input type="radio" name="pay_type" value="alipay" title="" checked="">
+								<div class="layui-unselect layui-form-radio layui-form-radioed"><i class="layui-anim layui-icon"></i>
+									<div> <i class="iconfont icon-alipay" title="支付宝" style="top: -1px;"></i> </div>
+								</div>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<div class="layui-input-block"> <input type="hidden" name="itemid" value="10"> <button class="layui-btn layui-btn-danger"
+								 lay-submit="" lay-filter="orderPay">立即提交</button> </div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="../../js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="../../js/moment.min.js"></script>
+		<script type="text/javascript" src="../../js/vue-main.js"></script>
+		<script>
+			var gender = ['男', '女'];
+			var vue = new Vue({
+				el: "#main",
+				data: {
+					childrens: "",
+					pageSize: 5,
+					total: 0,
+					pages: 0,
+					pageNum: 1,
+					inputtext: {},
+					editInp: {}
+				},
+				methods: {
+					getStudent: function(pageIndex) {
+						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
+						var _this = this;
+						axios.get('/student/findByDyna', {
+							params: {
+								name: _this.inputtext.name == "" ? null : _this.inputtext.name,
+								contract: _this.inputtext.name == "" ? null : _this.inputtext.name,
+								pageNum: pageIndex,
+								size: _this.pageSize
+							}
+						}).then(function(res) {
+							console.info(res);
+							_this.childrens = res.data.data.rows;
+							_this.pageNum = pageIndex;
+							_this.total = res.data.data.total;
+							_this.pages = Math.ceil(_this.total / _this.pageSize);
+						})
+					},
+					pageClick: function(page) {
+						this.getStudent(page);
+					},
+					prePage: function() {
+						this.pageNum--;
+						if (this.pageNum < 1) {
+							this.pageNum = 1;
+							return;
+						}
+						this.getStudent(this.pageNum);
+					},
+					nextPage: function() {
+						this.pageNum++;
+						if (this.pageNum > this.pages) {
+							this.pageNum = this.pages;
+							return;
+						}
+						this.getStudent(this.pageNum);
+					},
+					logout: function() {
+						logout();
+						location.href = "login.html";
+					},
+					findChil: function(id) {
+						layer.open({
+							type: 2,
+							title: '学生信息',
+							shadeClose: true,
+							closeBtn: 1,
+							scrollbar: true,
+							area: ['100%', '100%'],
+							content: ['parents_chi.html?id=' + id],
+						})
+					},
+					deleteU: function(id) {
+						var _this = this;
+						layer.confirm("是否删除该用户？", {
+							btn: ['确认', '取消'] //按钮
+						}, function() {
+							axios.post('/user/deleteUser/' + id).then(function(res) {
+								if (res.data.code == 200) {
+									layer.alert('删除成功', {
+										icon: 6
+									});
+									_this.getStudent(1);
+								} else {
+									layer.alert(res.data.message, {
+										icon: 5
+									});
+								}
+							});
+						});
+					},
+					editP: function(id) {
+						var _this = this;
+						layer.open({
+							type: 2,
+							title: '修改学生信息',
+							shadeClose: true,
+							closeBtn: 1,
+							scrollbar: true,
+							area: ['600px', '400px'],
+							content: ['student_edit.html?id=' + id],
+							end: function() {
+								_this.getStudent();
+							}
+						})
+					},
+				},
+				created: function() {
+					this.getStudent();
+				},
+				filters: {
+					dateFilter: function(value) {
+						if (!value) return '';
+						var date = moment(value).toDate();
+						return moment(date).format("YYYY-MM-DD");
+					},
+					optStatusFilter: function(value) {
+						return gender[value];
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>
