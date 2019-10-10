@@ -201,16 +201,11 @@ public class FileUtil {
 			Map<String, Object> map = new HashMap<String, Object>();
 			String fileName = file.getOriginalFilename();
 			map.put("fileName", fileName);
-			String suffixList = "jpg,gif,png,ico,bmp,jpeg";
 			String suffix = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-			if (suffixList.contains(suffix.trim().toLowerCase())) {
-				fileName = UUIDUtils.get16UUID();
-				FileUtil.fileUp(file, uploadFilePath, fileName);
-				map.put("filePath", fileName + "." + suffix);
-				return map;
-			} else {
-				throw new ServiceException("文件类型不支持");
-			}
+			fileName = UUIDUtils.get16UUID();
+			FileUtil.fileUp(file, uploadFilePath, fileName);
+			map.put("filePath", fileName + "." + suffix);
+			return map;
 		} else {
 			throw new ServiceException("文件为空");
 		}

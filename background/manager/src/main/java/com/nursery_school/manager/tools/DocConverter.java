@@ -206,7 +206,7 @@ public class DocConverter {
 
 	public static void main(String s[]) {
 		// 修改1-不支持中文路径和中文文档
-		DocConverter d = new DocConverter("E://workspace/1111.docx");
+		DocConverter d = new DocConverter("e:/data/upload/images/3c8LnW3p2X30O345.docx");
 		d.conver();
 	}
 }

@@ -45,6 +45,9 @@ public class PayStandardDynaProvider {
 				if (map.get("year") != null) {
 					SET("year=#{year}");
 				}
+				if (map.get("file") != null) {
+					SET("file=#{file}");
+				}
 				WHERE("id=#{id}");
 			}
 		}.toString();

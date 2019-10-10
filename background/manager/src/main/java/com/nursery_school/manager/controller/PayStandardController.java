@@ -1,8 +1,12 @@
 package com.nursery_school.manager.controller;
 
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -31,8 +36,14 @@ public class PayStandardController {
 
 	@LoginRequired(value = "3")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public Result add(@RequestBody PayStandard payStandard, @CurrentUser User currentUser) {
-		payStandardService.add(payStandard);
+	public Result add(@RequestParam(required = false) Map<String, Object> map, @CurrentUser User currentUser,
+			@RequestParam(required = false) MultipartFile file) throws IllegalAccessException, InvocationTargetException, ParseException {
+		PayStandard payStandard = new PayStandard();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		map.put("year", sdf.parse(map.get("year").toString()));
+		map.put("paymentDeadline", sdf.parse(map.get("paymentDeadline").toString()));
+		BeanUtils.populate(payStandard, map);
+		payStandardService.add(payStandard, file);
 		return ResultGenerator.genSuccessResult("添加成功");
 	}
 
@@ -54,9 +65,10 @@ public class PayStandardController {
 
 	@LoginRequired(value = "3")
 	@RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
-	public Result update(@PathVariable String id, @RequestBody Map<String, Object> map, @CurrentUser User currentUser) {
+	public Result update(@PathVariable String id, @RequestBody Map<String, Object> map, @CurrentUser User currentUser,
+			MultipartFile file) {
 		map.put("id", id);
-		payStandardService.update(map);
+		payStandardService.update(map, file);
 		return ResultGenerator.genSuccessResult("修改成功");
 	}
 
@@ -65,5 +77,5 @@ public class PayStandardController {
 	public Result findById(@PathVariable String id, @CurrentUser User currentUser) {
 		return ResultGenerator.genSuccessResult(payStandardService.findById(id));
 	}
-	
+
 }
