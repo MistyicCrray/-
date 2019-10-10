@@ -65,6 +65,14 @@
 					</div>
 				</div>
 				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						文件
+					</label>
+					<div class="layui-input-inline">
+						<input type="file" id="file" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
 					<label for="L_repass" class="layui-form-label">
 					</label>
 					<button class="layui-btn" lay-filter="add" v-on:click="submit">
@@ -152,7 +160,15 @@
 						}
 						_this.inputtext.year = $("#year").val() == "" ? null : $("#year").val();
 						_this.inputtext.paymentDeadline = $("#dayly").val() == "" ? null : $("#dayly").val();
-						axios.post('/payStandard/update/' + id, _this.inputtext)
+						var formData = new FormData();
+						formData.append("year", _this.inputtext.year);
+						formData.append("paymentDeadline", _this.inputtext.paymentDeadline);
+						formData.append("file", $("#file")[0].files[0]);
+						formData.append("quarterage", _this.inputtext.quarterage);
+						formData.append("boardAges", _this.inputtext.boardAges);
+						formData.append("bookMoney", _this.inputtext.bookMoney);
+						formData.append("schooling", _this.inputtext.schooling);
+						axios.post('/payStandard/update/' + id, formData)
 							.then(function(res) {
 								console.info(res)
 								if (res.data.code == 400) {
