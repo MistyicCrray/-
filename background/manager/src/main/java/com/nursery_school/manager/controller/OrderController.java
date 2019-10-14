@@ -90,33 +90,43 @@ public class OrderController {
 					Map<String, Object> orMap = new HashMap<String, Object>();
 					orMap.put("studentId", student.getId());
 					// 得到该家长孩子的收费信息
-					List<Order> orders = orderService.findByDyna(orMap);
+//					List<Order> orders = orderService.findByDyna(orMap);
 					// 如果已经有收费信息循环
-					if (orders.size() != 0) {
-						for (Order order : orders) {
-							order.setStudent(student);
-							PayStandard findById = payStandardService.findById(order.getPayStandardId());
-							for (PayStandard payStandard : findAll) {
-								if (!order.getPayStandardId().equals(payStandard.getId()) && !sdf.format(payStandard.getYear()).equals(sdf.format(findById.getYear()))) {
-									Order newOrder = new Order();
-									newOrder.setState(0);
-									newOrder.setStudent(student);
-									newOrder.setPayStandard(payStandard);
-									resMap.add(newOrder);
-								}
-							}
-							order.setPayStandard(findById);
-							resMap.add(order);
-						}
-					} else { // 没有收费信息时将收费标准列出来
+//					if (orders.size() != 0) {
+						// for (Order order : orders) {
+						// order.setStudent(student);
+						// PayStandard findById =
+						// payStandardService.findById(order.getPayStandardId());
+						// order.setPayStandard(findById);
+						// resMap.add(order);
 						for (PayStandard payStandard : findAll) {
-							Order order = new Order();
-							order.setStudent(student);
-							order.setState(0);
-							order.setPayStandard(payStandard);
-							resMap.add(order);
+							Map<String, Object> newOrderMap = new HashMap<String, Object>();
+							newOrderMap.put("studentId", student.getId());
+							newOrderMap.put("payStandardId", payStandard.getId());
+							List<Order> findByDyna = orderService.findByDyna(newOrderMap);
+							Order newOrder = new Order();
+							if (findByDyna.size() != 0) {
+								newOrder = findByDyna.get(0);
+								newOrder.setStudent(student);
+								newOrder.setPayStandard(payStandard);
+							} else {
+								newOrder.setState(0);
+								newOrder.setStudent(student);
+								newOrder.setPayStandard(payStandard);
+							}
+							
+							resMap.add(newOrder);
+							// }
 						}
-					}
+//					} else { // 没有收费信息时将收费标准列出来
+//						for (PayStandard payStandard : findAll) {
+//							Order order = new Order();
+//							order.setStudent(student);
+//							order.setState(0);
+//							order.setPayStandard(payStandard);
+//							resMap.add(order);
+//						}
+//					}
 				}
 			}
 		}
@@ -128,7 +138,7 @@ public class OrderController {
 	public Result findById(@PathVariable(value = "id") String id) {
 		Order order = orderService.findById(id);
 		Map<String, Object> stuMap = new HashMap<String, Object>();
-		stuMap.put("studentId", order.getStudent());
+		stuMap.put("id", order.getStudentId());
 		List<Student> students = studentService.findByDyna(stuMap);
 		Student student = students.get(0);
 		order.setStudent(student);
@@ -147,7 +157,7 @@ public class OrderController {
 	 * @param currentUser
 	 * @return
 	 */
-	@LoginRequired(value = "1")
+	@LoginRequired(value = "3")
 	@RequestMapping(value = "/findOrderByLeader", method = RequestMethod.GET)
 	public Result findOrderByLeader(@RequestParam(required = false) Map<String, Object> map, Integer pageNum,
 			Integer size, @CurrentUser User currentUser) {

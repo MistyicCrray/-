@@ -149,10 +149,14 @@
 					},
 					deleteU: function(id) {
 						var _this = this;
-						layer.confirm("是否删除该用户？", {
+						layer.confirm("是否删除该条目？", {
 							btn: ['确认', '取消'] //按钮
 						}, function() {
 							axios.post('/dishes/delete/' + id).then(function(res) {
+								if (res.status == 202) {
+									alert("无权访问");
+									return;
+								}
 								if (res.data.code == 200) {
 									layer.alert('删除成功', {
 										icon: 6

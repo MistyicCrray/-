@@ -67,13 +67,13 @@
 						<td>{{item.payStandard.year | dateFilter}}</td>
 						<td>{{item.state | optStatusFilter}}</td>
 						<td>
-							<a title="去支付" href="javascript:;" v-if="item.state==0 && day[index]<0" v-on:click="toPay(item.id, item.payStandard.id, item.student.id)">
+							<a title="去支付" href="javascript:;" v-if="item.state == 0 && day[index] <= 0" v-on:click="toPay(item.id, item.payStandard.id, item.student.id)">
 								<i class="layui-icon">去支付</i>
 							</a>
 							<a title="已支付" v-if="item.state==1">
 								<i class="layui-icon">已支付</i>
 							</a>
-							<a title="已超过缴费时间" v-if="day[index] >= 0 && item.state!=1">
+							<a title="已超过缴费时间" v-if="day[index] > 0 && item.state!=1">
 								<i class="layui-icon">已超过缴费时间</i>
 							</a>
 						</td>
@@ -113,7 +113,7 @@
 				el: "#main",
 				data: {
 					orders: [],
-					pageSize: 2,
+					pageSize: 5,
 					total: 0,
 					pages: 0,
 					pageNum: 1,
@@ -140,11 +140,14 @@
 							_this.pageNum = pageIndex;
 							_this.total = res.data.data.total;
 							_this.pages = Math.ceil(_this.total / _this.pageSize);
-							var nowDate = new Date();
+							var nowDate = moment(new Date()).format("YYYY-MM-DD");
+							nowDate = new Date(nowDate);
 							for (var i = 0; i < _this.orders.length; i++) {
 								var oDate1 = new Date(_this.orders[i].payStandard.paymentDeadline);
+								oDate1.setHours(23);
+								oDate1.setMinutes(59);
+								oDate1.setSeconds(59);
 								_this.day[i] = nowDate.getTime() - oDate1.getTime();
-								console.info(_this.day[i]);
 							}
 						})
 					},

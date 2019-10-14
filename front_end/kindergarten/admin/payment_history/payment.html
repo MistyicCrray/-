@@ -47,6 +47,7 @@
 						<th>伙食费</th>
 						<th>住宿费</th>
 						<th>总计</th>
+						<th>缴费状态</th>
 						<th>学生姓名</th>
 						<th>缴费期限</th>
 						<th>收费学年</th>
@@ -62,6 +63,7 @@
 						<td>{{item.payStandard.boardAges/100}}</td>
 						<td>{{item.payStandard.quarterage/100}}</td>
 						<td>{{item.payStandard.schooling/100 + item.payStandard.bookMoney/100 + item.payStandard.boardAges/100 + item.payStandard.quarterage/100}}</td>
+						<td>{{item.state | optStatusFilter}}</td>
 						<td>{{item.student.name}}</td>
 						<td>{{item.payStandard.paymentDeadline | dateFilter}}</td>
 						<td>{{item.payStandard.year | dateFilter}}</td>
@@ -98,7 +100,7 @@
 		<script type="text/javascript" src="../../js/moment.min.js"></script>
 		<script type="text/javascript" src="../../js/vue-main.js"></script>
 		<script>
-			var gender = ['男', '女'];
+			var gender = ['未交费', '已缴费'];
 			var vue = new Vue({
 				el: "#main",
 				data: {

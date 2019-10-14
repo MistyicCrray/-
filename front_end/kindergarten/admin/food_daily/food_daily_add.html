@@ -20,9 +20,7 @@
 					<label for="L_email" class="layui-form-label">
 						早餐菜式
 					</label>
-					<div class="layui-input-inline">
-						<input v-for="item in childrens" type="checkbox" name="breakfast_food" v-bind:value="item.id" v-bind:title="item.name">
-					</div>
+					<input v-for="item in childrens" type="checkbox" name="breakfast_food" lay-skin="primary" v-bind:value="item.id" v-bind:title="item.name">
 				</div>
 				<div class="layui-form-item">
 					<label for="L_email" class="layui-form-label">
@@ -36,9 +34,8 @@
 					<label for="L_email" class="layui-form-label">
 						午餐菜式
 					</label>
-					<div class="layui-input-inline">
-						<input v-for="item in childrens" type="checkbox" name="lunch_food" v-bind:value="item.id" v-bind:title="item.name">
-					</div>
+					<input v-for="item in childrens" type="checkbox" name="lunch_food" lay-skin="primary" v-bind:value="item.id"
+					 v-bind:title="item.name">
 				</div>
 				<div class="layui-form-item">
 					<label for="L_email" class="layui-form-label">
@@ -52,9 +49,7 @@
 					<label for="L_email" class="layui-form-label">
 						晚餐菜式
 					</label>
-					<div class="layui-input-inline">
-						<input v-for="item in childrens" type="checkbox" name="dinner_food" v-bind:value="item.id" v-bind:title="item.name">
-					</div>
+					<input v-for="item in childrens" type="checkbox" name="dinner_food" lay-skin="primary" v-bind:value="item.id" v-bind:title="item.name">
 				</div>
 				<div class="layui-form-item">
 					<label for="L_email" class="layui-form-label">
@@ -206,6 +201,10 @@
 						axios.post('/dishesDaily/add', _this.inputtext)
 							.then(function(res) {
 								console.info(res)
+								if (res.status == 202) {
+									alert("无权访问");
+									return;
+								}
 								if (res.data.code == 400) {
 									layer.alert(res.data.message, {
 										icon: 5

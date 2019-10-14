@@ -29,21 +29,21 @@ public class DishesDailyController {
 	@Autowired
 	private DishesDailyService dishesDailyService;
 
-	@LoginRequired(value = "1")
+	@LoginRequired(value = "4")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public Result add(@RequestBody DishesDaily cleaning, @CurrentUser User currentUser) {
 		dishesDailyService.add(cleaning);
 		return ResultGenerator.genSuccessResult("添加成功");
 	}
 
-	@LoginRequired(value = "1")
+	@LoginRequired(value = "4")
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
 	public Result delete(@PathVariable String id, @CurrentUser User currentUser) {
 		dishesDailyService.delete(id);
 		return ResultGenerator.genSuccessResult("删除成功");
 	}
 
-	@LoginRequired(value = "1")
+	@LoginRequired(value = "4")
 	@RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
 	public Result update(@PathVariable String id,@RequestBody Map<String, Object> map, @CurrentUser User currentUser) {
 		map.put("id", id);
@@ -51,18 +51,15 @@ public class DishesDailyController {
 		return ResultGenerator.genSuccessResult("修改成功");
 	}
 
-	@LoginRequired(value = "1")
 	@RequestMapping(value = "/find", method = RequestMethod.GET)
-	public Result find(@RequestParam(required = false) Map<String, Object> map, Integer pageNum,
-			Integer size, @CurrentUser User currentUser) {
+	public Result find(@RequestParam(required = false) Map<String, Object> map, Integer pageNum, Integer size) {
 		Page<DishesDaily> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
 		List<DishesDaily> findByDyna = dishesDailyService.findByDyna(map);
 		return ResultGenerator.genSuccessResult(new TableData<DishesDaily>(page.getTotal(), findByDyna));
 	}
 
-	@LoginRequired(value = "1")
 	@RequestMapping(value = "/findById/{id}", method = RequestMethod.GET)
-	public Result findById(@PathVariable String id, @CurrentUser User currentUser) {
+	public Result findById(@PathVariable String id) {
 		return ResultGenerator.genSuccessResult(dishesDailyService.findById(id));
 	}
 }

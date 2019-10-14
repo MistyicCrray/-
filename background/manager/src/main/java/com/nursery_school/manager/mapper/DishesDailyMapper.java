@@ -148,7 +148,10 @@ public interface DishesDailyMapper {
         @Result(column="dinner_money", property="dinnerMoney", jdbcType=JdbcType.INTEGER),
         @Result(column="dishes_date", property="dishesDate", jdbcType=JdbcType.DATE),
         @Result(column="create_date", property="createDate", jdbcType=JdbcType.DATE),
-        @Result(column="create_by", property="createBy", jdbcType=JdbcType.VARCHAR)
+        @Result(column="create_by", property="createBy", jdbcType=JdbcType.VARCHAR),
+        @Result(column="breakfast_food_id", property="breakfastFoodId", jdbcType=JdbcType.VARCHAR),
+        @Result(column="lunch_food_id", property="lunchFoodId", jdbcType=JdbcType.VARCHAR),
+        @Result(column="dinner_food_id", property="dinnerFoodId", jdbcType=JdbcType.VARCHAR)
     })
     List<DishesDaily> findByDyna(Map<String, Object> map);
     

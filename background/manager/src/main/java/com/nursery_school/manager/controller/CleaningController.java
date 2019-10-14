@@ -45,24 +45,21 @@ public class CleaningController {
 
 	@LoginRequired(value = "5")
 	@RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
-	public Result update(@PathVariable String id,@RequestBody Map<String, Object> map, @CurrentUser User currentUser) {
+	public Result update(@PathVariable String id, @RequestBody Map<String, Object> map, @CurrentUser User currentUser) {
 		map.put("id", id);
 		cleaningService.update(map);
 		return ResultGenerator.genSuccessResult("修改成功");
 	}
 
-	@LoginRequired(value = "5")
 	@RequestMapping(value = "/find", method = RequestMethod.GET)
-	public Result find(@RequestParam(required = false) Map<String, Object> map, Integer pageNum,
-			Integer size, @CurrentUser User currentUser) {
+	public Result find(@RequestParam(required = false) Map<String, Object> map, Integer pageNum, Integer size) {
 		Page<Cleaning> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
 		List<Cleaning> findByDyna = cleaningService.findByDyna(map);
 		return ResultGenerator.genSuccessResult(new TableData<Cleaning>(page.getTotal(), findByDyna));
 	}
 
-	@LoginRequired(value = "5")
 	@RequestMapping(value = "/findById/{id}", method = RequestMethod.GET)
-	public Result findById(@PathVariable String id, @CurrentUser User currentUser) {
+	public Result findById(@PathVariable String id) {
 		return ResultGenerator.genSuccessResult(cleaningService.findById(id));
 	}
 }

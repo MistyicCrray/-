@@ -48,4 +48,8 @@ public class CleaningInfoService {
 	public List<CleaningInfo> findByDyna(Map<String, Object> map) {
 		return cleaningInfoMapper.findByDyna(map);
 	}
+
+	public CleaningInfo findById(String id) {
+		return cleaningInfoMapper.selectByPrimaryKey(id);
+	}
 }

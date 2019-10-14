@@ -14,9 +14,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.nursery_school.manager.model.Cleaning;
 import com.nursery_school.manager.model.CleaningInfo;
+import com.nursery_school.manager.model.Staff;
 import com.nursery_school.manager.model.User;
 import com.nursery_school.manager.service.CleaningInfoService;
+import com.nursery_school.manager.service.CleaningService;
+import com.nursery_school.manager.service.StaffService;
 import com.nursery_school.manager.tools.CurrentUser;
 import com.nursery_school.manager.tools.LoginRequired;
 import com.nursery_school.manager.tools.Result;
@@ -29,6 +33,12 @@ public class CleaningInfoController {
 
 	@Autowired
 	private CleaningInfoService cleaningInfoService;
+
+	@Autowired
+	private StaffService staffService;
+
+	@Autowired
+	private CleaningService cleaningService;
 
 	@LoginRequired(value = "5")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -47,19 +57,27 @@ public class CleaningInfoController {
 
 	@LoginRequired(value = "5")
 	@RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
-	public Result update(@PathVariable String id, @RequestParam(required = false) Map<String, Object> map, @CurrentUser User currentUser, MultipartFile img) {
+	public Result update(@PathVariable String id, @RequestParam(required = false) Map<String, Object> map,
+			@CurrentUser User currentUser, MultipartFile img) {
 		map.put("id", id);
-		cleaningInfoService.update(map,img);
+		cleaningInfoService.update(map, img);
 		return ResultGenerator.genSuccessResult("修改成功");
 	}
 
-	@LoginRequired(value = "5")
 	@RequestMapping(value = "/find", method = RequestMethod.GET)
-	public Result find(@RequestParam(required = false) Map<String, Object> map, Integer pageNum, Integer size,
-			@CurrentUser User currentUser) {
+	public Result find(@RequestParam(required = false) Map<String, Object> map, Integer pageNum, Integer size) {
 		Page<CleaningInfo> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
 		List<CleaningInfo> findByDyna = cleaningInfoService.findByDyna(map);
 		return ResultGenerator.genSuccessResult(new TableData<CleaningInfo>(page.getTotal(), findByDyna));
 	}
 
+	@RequestMapping(value = "/find/{id}", method = RequestMethod.GET)
+	public Result find(@PathVariable String id) {
+		CleaningInfo cleaningInfo = cleaningInfoService.findById(id);
+		Staff staff = staffService.findById(cleaningInfo.getStaffId());
+		cleaningInfo.setStaff(staff);
+		Cleaning cleaning = cleaningService.findById(cleaningInfo.getCleaningId());
+		cleaningInfo.setCleaning(cleaning);
+		return ResultGenerator.genSuccessResult(cleaningInfo);
+	}
 }

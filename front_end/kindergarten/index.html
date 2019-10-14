@@ -3,8 +3,8 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>首页</title>
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link rel="stylesheet" href="lib/layui/css/layui.css" />
+		<script src="lib/layui/layui.all.js"></script>
 	</head>
 	<style type="text/css">
 		.class_d {
@@ -24,7 +24,7 @@
 		}
 	</style>
 	<body>
-		<div class="layui-container">
+		<div class="layui-container" id="main">
 			<div class="layui-col-xs12">
 				<img src="img/banner_img_24.png" width="100%" />
 			</div>
@@ -42,57 +42,37 @@
 			<div class="layui-col-xs12">
 				<div class="layui-carousel" id="test10">
 					<div carousel-item="">
-						<div><img src="img/1.jpg" width="100%"></div>
-						<div><img src="img/2.jpg" width="100%"></div>
-						<div><img src="img/3.jpg" width="100%"></div>
+						<div><img src="img/banner1.jpg" width="100%"></div>
+						<div><img src="img/banner2.jpg" width="100%"></div>
+						<div><img src="img/banner3.jpg" width="100%"></div>
+						<div><img src="img/banner4.jpg" width="100%"></div>
 					</div>
 				</div>
 			</div>
 			<div class="layui-col-xs5">
 				<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
 					<ul class="layui-tab-title">
-						<li class="layui-this">网站设置</li>
-						<li>用户管理</li>
+						<li class="layui-this">日常菜式</li>
+						<li>清扫计划</li>
 						<li>权限分配</li>
 						<li><a href="#">更多>></a></li>
 					</ul>
 					<div class="layui-tab-content" style="height: 100px;">
-						<div class="layui-tab-item layui-show">内容不一样是要有，因为你可以监听tab事件（阅读下文档就是了）</div>
+						<div class="layui-tab-item layui-show">
+							<ul>
+								<li v-for="item in dishes">
+									<div class="class_d">
+										<a href="#" v-on:click="checkDishesDetail(item.id)">{{item.dishesDate | dateFilter}}日菜式</a>
+									</div>
+									<span style="width: 30%;">【{{item.dishesDate | dateFilter}}】</span>
+								</li>
+							</ul>
+						</div>
 						<div class="layui-tab-item">
 							<ul>
-								<li>
+								<li v-for="item in clean">
 									<div class="class_d">
-										<a href="#" title="[主题教育]宝石与艺术设计学院召开“不忘初心、牢221231232132132">[主题教育]宝石与艺术设计学院召开“不忘初心、牢221231232132132</a>
-									</div>
-									<span style="width: 30%;">【2019-09-09】</span>
-								</li>
-								<li>
-									<div class="class_d">
-										<a href="#" title="[主题教育]宝石与艺术设计学院召开“不忘初心、牢221231232132132">[主题教育]宝石与艺术设计学院召开“不忘初心、牢221231232132132</a>
-									</div>
-									<span style="width: 30%;">【2019-09-09】</span>
-								</li>
-								<li>
-									<div class="class_d">
-										<a href="#" title="[主题教育]宝石与艺术设计学院召开“不忘初心、牢221231232132132">[主题教育]宝石与艺术设计学院召开“不忘初心、牢221231232132132</a>
-									</div>
-									<span style="width: 30%;">【2019-09-09】</span>
-								</li>
-								<li>
-									<div class="class_d">
-										<a href="#" title="[主题教育]宝石与艺术设计学院召开“不忘初心、牢221231232132132">[主题教育]宝石与艺术设计学院召开“不忘初心、牢221231232132132</a>
-									</div>
-									<span style="width: 30%;">【2019-09-09】</span>
-								</li>
-								<li>
-									<div class="class_d">
-										<a href="#" title="[主题教育]宝石与艺术设计学院召开“不忘初心、牢221231232132132">[主题教育]宝石与艺术设计学院召开“不忘初心、牢221231232132132</a>
-									</div>
-									<span style="width: 30%;">【2019-09-09】</span>
-								</li>
-								<li>
-									<div class="class_d">
-										<a href="#" title="[主题教育]宝石与艺术设计学院召开“不忘初心、牢221231232132132">[主题教育]宝石与艺术设计学院召开“不忘初心、牢221231232132132</a>
+										<a href="#" v-on:click="checkCleaningDetail(item.id)">{{item.site}}</a>
 									</div>
 									<span style="width: 30%;">【2019-09-09】</span>
 								</li>
@@ -136,18 +116,18 @@
 					<div class="layui-inline">
 						<label class="layui-form-label">账号</label>
 						<div class="layui-input-inline">
-							<input type="tel" autocomplete="off" class="layui-input">
+							<input type="tel" v-model="inputtext.loginName" autocomplete="off" class="layui-input">
 						</div>
 					</div>
 					<div class="layui-inline">
 						<label class="layui-form-label">密码</label>
 						<div class="layui-input-inline">
-							<input type="text" autocomplete="off" class="layui-input">
+							<input type="password" v-model="inputtext.password" autocomplete="off" class="layui-input">
 						</div>
 					</div>
 					<div class="layui-inline">
 						<div class="layui-input-inline">
-							<button type="button" class="layui-btn layui-btn-primary">登录</button>
+							<button type="button" class="layui-btn layui-btn-primary" v-on:click="login()">登录</button>
 						</div>
 					</div>
 				</div>
@@ -158,19 +138,118 @@
 				</div>
 			</div>
 		</div>
-		<script src="js/layui.all.js"></script>
+		<script src="js/vue-2.5.17.min.js"></script>
+		<script src="js/axios-0.18.min.js"></script>
+		<script src="js/moment.min.js"></script>
+		<script src="js/vue-main.js"></script>
 		<script>
-			layui.use(['carousel', 'form'], function() {
-				var carousel = layui.carousel,
-					form = layui.form;
-				//图片轮播
-				carousel.render({
-					elem: '#test10',
-					width: '100%',
-					height: '347px',
-					interval: 5000
-				});
-			});
+			var vue = new Vue({
+				el: "#main",
+				data: {
+					user: {},
+					inputtext: {
+						loginName: '',
+						password: ''
+					},
+					dishes: [],
+					clean: []
+				},
+				methods: {
+					login: function() {
+						var _this = this;
+						if (_this.inputtext.loginName == "") {
+							layer.alert('请输入用户名', {
+								icon: 5
+							});
+							return;
+						}
+						if (_this.inputtext.password == "") {
+							layer.alert('请输入密码', {
+								icon: 5
+							});
+							return;
+						}
+						axios.post('/user/login', _this.inputtext)
+							.then(function(response) {
+								console.info(response.data.code);
+								if (response.data.code == 200) {
+									sessionStorage.setItem("userId", response.data.data.userInfo.id);
+									sessionStorage.setItem("username", response.data.data.userInfo.name);
+									sessionStorage.setItem("accessToken", response.data.data.accessToken);
+									sessionStorage.setItem("userType", response.data.data.userInfo.userType);
+									layer.alert("登录成功");
+									window.location.href = 'admin/index.html';
+								} else {
+									layer.alert(response.data.message);
+								}
+
+							})
+							.catch(function(err) {
+
+							});
+					},
+					findDishes: function() {
+						var _this = this;
+						axios.get('/dishesDaily/find').then(function(res) {
+							console.info(res);
+							_this.dishes = res.data.data.rows;
+						})
+					},
+					checkDishesDetail: function(id) {
+						layer.open({
+							type: 2,
+							title: '菜品详情',
+							shadeClose: true,
+							closeBtn: 1,
+							scrollbar: true,
+							area: ['600px', '400px'],
+							content: ['detail/dishesDetail.html?id=' + id],
+						})
+					},
+					findCleaning: function() {
+						var _this = this;
+						axios.get('/cleaning/find').then(function(res) {
+							console.info(res);
+							_this.clean = res.data.data.rows;
+						})
+					},
+					checkCleaningDetail: function(id) {
+						layer.open({
+							type: 2,
+							title: '清洁信息',
+							shadeClose: true,
+							closeBtn: 1,
+							scrollbar: true,
+							area: ['600px', '400px'],
+							content: ['detail/cleaningDetail.html?id=' + id],
+						})
+					},
+				},
+				created: function() {
+					this.findDishes();
+					this.findCleaning();
+					this.$nextTick(function() {
+						layui.use(['carousel', 'form'], function() {
+							var carousel = layui.carousel,
+								form = layui.form;
+							//图片轮播
+							carousel.render({
+								elem: '#test10',
+								width: '100%',
+								height: '347px',
+								interval: 5000
+							});
+						});
+					});
+				},
+				filters: {
+					dateFilter: function(value) {
+						if (!value) return '';
+						var date = moment(value).toDate();
+						return moment(date).format("YYYY-MM-DD");
+					},
+				}
+			})
 		</script>
 	</body>
 </html>

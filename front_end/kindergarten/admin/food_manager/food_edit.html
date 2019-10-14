@@ -79,6 +79,10 @@
 						axios.post('/dishes/update/' + id, _this.inputtext)
 							.then(function(res) {
 								console.info(res)
+								if (res.status == 202) {
+									alert("无权访问");
+									return;
+								}
 								if (res.data.code == 400) {
 									layer.alert(res.data.message, {
 										icon: 5
