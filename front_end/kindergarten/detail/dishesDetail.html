@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<link rel="stylesheet" href="../css/font.css">
+	<link rel="stylesheet" href="../css/xadmin.css">
+	<link rel="stylesheet" href="../lib/layui/css/layui.css" />
+	<script src="../lib/layui/layui.all.js"></script>
+	<body>
+		<div id="main">
+			<div class="layui-form">
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						早餐菜式:
+					</label>
+					<div class="layui-input-inline" v-for="item in breakfastFoods">
+						<span style="color: red;">{{item.name}}</span> : {{item.ingredients}}
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						早餐价格:
+					</label>
+					<div class="layui-input-inline">
+						{{childrens.breakfastMoney/100}}元
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						午餐菜式:
+					</label>
+					<div class="layui-input-inline" v-for="item in lunchFoods">
+						<span style="color: red;">{{item.name}}</span> : {{item.ingredients}}
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						午餐价格:
+					</label>
+					<div class="layui-input-inline">
+						{{childrens.lunchMoney/100}}元
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						晚餐菜式:
+					</label>
+					<div class="layui-input-inline" v-for="item in dinnerFoods">
+						<span style="color: red;">{{item.name}}</span> : {{item.ingredients}}
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						晚餐价格:
+					</label>
+					<div class="layui-input-inline">
+						{{childrens.dinnerMoney/100}}元
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_email" class="layui-form-label">
+						菜单日期:
+					</label>
+					<div class="layui-input-inline">
+						{{childrens.dishesDate | dateFilter}}
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/vue-2.5.17.min.js"></script>
+		<script src="../js/axios-0.18.min.js"></script>
+		<script src="../js/moment.min.js"></script>
+		<script src="../js/vue-main.js"></script>
+		<script>
+			var id = GetQueryString("id");
+			var vue = new Vue({
+				el: "#main",
+				data: {
+					childrens: "",
+					breakfastFoods: [],
+					lunchFoods: [],
+					dinnerFoods: []
+				},
+				methods: {
+					getStudent: function() {
+						var _this = this;
+						axios.get('/dishesDaily/findById/' + id).then(function(res) {
+							console.info(res);
+							_this.childrens = res.data.data;
+							_this.breakfastFoods = _this.childrens.breakfastDishes;
+							_this.lunchFoods = _this.childrens.lunchDishes;
+							_this.dinnerFoods = _this.childrens.dinnerDishes;
+						})
+					},
+				},
+				created: function() {
+					this.getStudent();
+				},
+				filters: {
+					dateFilter: function(value) {
+						if (!value) return '';
+						var date = moment(value).toDate();
+						return moment(date).format("YYYY-MM-DD");
+					},
+					optStatusFilter: function(value) {
+						return gender[value];
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

@@ -19,6 +19,9 @@ public class DishesDailyService {
 
 	public void add(DishesDaily dishesDaily) {
 		dishesDaily.setId(UUIDUtils.get16UUID());
+		dishesDaily.setBreakfastMoney(dishesDaily.getBreakfastMoney() * 100);
+		dishesDaily.setLunchMoney(dishesDaily.getLunchMoney() * 100);
+		dishesDaily.setDinnerMoney(dishesDaily.getDinnerMoney() * 100);
 		dishesDaily.setCreateDate(new Date());
 		dishesDailyMapper.insert(dishesDaily);
 	}

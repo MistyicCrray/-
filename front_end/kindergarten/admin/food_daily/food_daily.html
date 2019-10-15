@@ -55,11 +55,11 @@
 					<tr v-for="item,index in childrens">
 						<td>{{index + 1}}</td>
 						<td>{{item.breakfastFood}}</td>
-						<td>{{item.breakfastMoney}}</td>
+						<td>{{item.breakfastMoney/100}}</td>
 						<td>{{item.lunchFood}}</td>
-						<td>{{item.lunchMoney}}</td>
+						<td>{{item.lunchMoney/100}}</td>
 						<td>{{item.dinnerFood}}</td>
-						<td>{{item.dinnerMoney}}</td>
+						<td>{{item.dinnerMoney/100}}</td>
 						<td>{{item.createDate | dateFilter}}</td>
 						<td>
 							<a title="编辑" v-on:click="editP(item.id)" href="javascript:;">

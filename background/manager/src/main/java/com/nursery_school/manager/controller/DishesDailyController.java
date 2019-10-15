@@ -1,5 +1,6 @@
 package com.nursery_school.manager.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.nursery_school.manager.model.Dishes;
 import com.nursery_school.manager.model.DishesDaily;
 import com.nursery_school.manager.model.User;
 import com.nursery_school.manager.service.DishesDailyService;
+import com.nursery_school.manager.service.DishesService;
 import com.nursery_school.manager.tools.CurrentUser;
 import com.nursery_school.manager.tools.LoginRequired;
 import com.nursery_school.manager.tools.Result;
@@ -28,6 +31,9 @@ public class DishesDailyController {
 
 	@Autowired
 	private DishesDailyService dishesDailyService;
+
+	@Autowired
+	private DishesService dishesService;
 
 	@LoginRequired(value = "4")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -60,6 +66,31 @@ public class DishesDailyController {
 
 	@RequestMapping(value = "/findById/{id}", method = RequestMethod.GET)
 	public Result findById(@PathVariable String id) {
-		return ResultGenerator.genSuccessResult(dishesDailyService.findById(id));
+		DishesDaily dishesDaily = dishesDailyService.findById(id);
+		String breakfastFoodId = dishesDaily.getBreakfastFoodId();
+		String[] breakfastFoodIds = breakfastFoodId.split(",");
+		String dinnerFoodId = dishesDaily.getDinnerFoodId();
+		String[] dinnerFoodIds = dinnerFoodId.split(",");
+		String lunchFoodId = dishesDaily.getLunchFoodId();
+		String[] lunchFoodIds = lunchFoodId.split(",");
+		List<Dishes> breakfastFoods = new ArrayList<Dishes>();
+		List<Dishes> dinnerFoods = new ArrayList<Dishes>();
+		List<Dishes> lunchFoods = new ArrayList<Dishes>();
+		for (String string : lunchFoodIds) {
+			Dishes dishes = dishesService.findById(string);
+			lunchFoods.add(dishes);
+		}
+		dishesDaily.setLunchDishes(lunchFoods);
+		for (String string : breakfastFoodIds) {
+			Dishes dishes = dishesService.findById(string);
+			breakfastFoods.add(dishes);
+		}
+		dishesDaily.setBreakfastDishes(breakfastFoods);
+		for (String string : dinnerFoodIds) {
+			Dishes dishes = dishesService.findById(string);
+			dinnerFoods.add(dishes);
+		}
+		dishesDaily.setDinnerDishes(dinnerFoods);
+		return ResultGenerator.genSuccessResult(dishesDaily);
 	}
 }

@@ -60,13 +60,16 @@
 						<td>{{item.quarterage/100}}</td>
 						<td>{{item.year | dateFilter}}</td>
 						<td>{{item.paymentDeadline | dateFilter}}</td>
-						<td><a href="javascript:;" v-on:click="check_file(item.file)">点击查看收费标准文件</a></td>
+						<td><a href="javascript:;" v-on:click="check_file(item.file)">点击预览收费标准文件</a></td>
 						<td>
 							<a title="编辑" v-on:click="editP(item.id)" href="javascript:;">
 								<i class="layui-icon">&#xe642;</i>
 							</a>
 							<a title="删除" v-on:click="deleteU(item.id)" href="javascript:;">
 								<i class="layui-icon">&#xe640;</i>
+							</a>
+							<a title="下载" v-bind:href="'/images/' + item.file">
+								<i class="layui-icon">&#xe601;</i>
 							</a>
 						</td>
 					</tr>
@@ -202,7 +205,7 @@
 						})
 					},
 					check_file: function(file) {
-						console.info(file.substr(0,16)+".swf")
+						console.info(file.substr(0, 16) + ".swf")
 						layer.open({
 							type: 2,
 							title: '收费标准',
@@ -210,7 +213,7 @@
 							closeBtn: 1,
 							scrollbar: true,
 							area: ['100%', '100%'],
-							content: ['file.html?file=' + file.substr(0,16)+".swf"],
+							content: ['file.html?file=' + file.substr(0, 16) + ".swf"],
 						})
 					},
 				},
