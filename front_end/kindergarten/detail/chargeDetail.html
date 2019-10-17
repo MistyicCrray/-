@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<link rel="stylesheet" href="../css/font.css">
+	<link rel="stylesheet" href="../css/xadmin.css">
+	<link rel="stylesheet" href="../lib/layui/css/layui.css" />
+	<script src="../lib/layui/layui.all.js"></script>
+	<body>
+		<div id="main">
+			<div class="layui-form">
+			</div>
+		</div>
+		<script src="../js/vue-2.5.17.min.js"></script>
+		<script src="../js/axios-0.18.min.js"></script>
+		<script src="../js/moment.min.js"></script>
+		<script src="../js/vue-main.js"></script>
+		<script>
+			var id = GetQueryString("id");
+			var vue = new Vue({
+				el: "#main",
+				data: {
+					childrens: "",
+					breakfastFoods: [],
+					lunchFoods: [],
+					dinnerFoods: []
+				},
+				methods: {
+
+				},
+				created: function() {
+
+				},
+				filters: {
+					dateFilter: function(value) {
+						if (!value) return '';
+						var date = moment(value).toDate();
+						return moment(date).format("YYYY-MM-DD");
+					},
+					optStatusFilter: function(value) {
+						return gender[value];
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

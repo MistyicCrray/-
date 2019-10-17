@@ -74,7 +74,7 @@
 					getParents: function() {
 						var _this = this;
 						axios.get('/parents/findParentChils/' + id).then(function(res) {
-							console.info(res.data.data.rows[0].s_id);
+							console.info(res.data.data.rows);
 							if(res.data.data.rows[0].s_id != "" || res.data.data.rows[0].s_id != undefined) {
 								_this.childrens = res.data.data.rows;
 							}

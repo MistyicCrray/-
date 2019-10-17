@@ -95,25 +95,6 @@
 					healthPlan: []
 				},
 				methods: {
-					getParents: function() {
-						var _this = this;
-						axios.get('/cleaning/find', {
-							params: {
-								size: 1000
-							}
-						}).then(function(res) {
-							console.info(res);
-							_this.healthPlan = res.data.data.rows;
-							var table = document.body.querySelector('#select_list');
-							for (var i = 0; i < _this.healthPlan.length; i++) {
-								console.info(_this.healthPlan[i].id + _this.healthPlan[i].site);
-								var option = document.createElement('option');
-								option.value = _this.healthPlan[i].id;
-								option.innerText = _this.healthPlan[i].site;
-								table.appendChild(option);
-							}
-						})
-					},
 					submit: function() {
 						var _this = this;
 						_this.inputtext.cleanStartTime = $("#cleanStartTime").val() == "" ? null : $("#cleanStartTime").val();
@@ -154,7 +135,25 @@
 					}
 				},
 				created: function() {
-					this.getParents();
+					this.$nextTick(function() {
+						var _this = this;
+						axios.get('/cleaning/find', {
+							params: {
+								size: 1000
+							}
+						}).then(function(res) {
+							console.info(res);
+							_this.healthPlan = res.data.data.rows;
+							var table = document.body.querySelector('#select_list');
+							for (var i = 0; i < _this.healthPlan.length; i++) {
+								console.info(_this.healthPlan[i].id + _this.healthPlan[i].site);
+								var option = document.createElement('option');
+								option.value = _this.healthPlan[i].id;
+								option.innerText = _this.healthPlan[i].site;
+								table.appendChild(option);
+							}
+						})
+					});
 				}
 			})
 		</script>

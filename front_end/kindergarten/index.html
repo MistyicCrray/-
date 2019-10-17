@@ -54,7 +54,7 @@
 					<ul class="layui-tab-title">
 						<li class="layui-this">日常菜式</li>
 						<li>清扫计划</li>
-						<li>权限分配</li>
+						<li>收费标准</li>
 						<li><a href="#">更多>></a></li>
 					</ul>
 					<div class="layui-tab-content" style="height: 100px;">
@@ -69,16 +69,26 @@
 							</ul>
 						</div>
 						<div class="layui-tab-item">
+							<div class="layui-tab-item layui-show">
+								<ul>
+									<li v-for="item in clean">
+										<div class="class_d">
+											<a href="#" v-on:click="checkCleaningDetail(item.id)">{{item.site}}</a>
+										</div>
+										<span style="width: 30%;">【2019-09-09】</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="layui-tab-item">
 							<ul>
-								<li v-for="item in clean">
+								<li v-for="item in payStandards">
 									<div class="class_d">
-										<a href="#" v-on:click="checkCleaningDetail(item.id)">{{item.site}}</a>
+										<a href="#" v-on:click="checkChargeDetail(item.id)">{{item.year | dateFilter}}收费标准</a>
 									</div>
-									<span style="width: 30%;">【2019-09-09】</span>
 								</li>
 							</ul>
 						</div>
-						<div class="layui-tab-item">内容3</div>
 					</div>
 				</div>
 			</div>
@@ -152,7 +162,8 @@
 						password: ''
 					},
 					dishes: [],
-					clean: []
+					clean: [],
+					payStandards: []
 				},
 				methods: {
 					login: function() {
@@ -224,10 +235,29 @@
 							content: ['detail/cleaningDetail.html?id=' + id],
 						})
 					},
+					findCharges: function() {
+						var _this = this;
+						axios.get('/payStandard/findByList').then(function(res) {
+							console.info(res);
+							_this.payStandards = res.data.data.rows;
+						})
+					},
+					checkChargeDetail: function(id) {
+						layer.open({
+							type: 2,
+							title: '收费标准',
+							shadeClose: true,
+							closeBtn: 1,
+							scrollbar: true,
+							area: ['600px', '400px'],
+							content: ['detail/chargeDetail.html?id=' + id],
+						})
+					},
 				},
 				created: function() {
 					this.findDishes();
 					this.findCleaning();
+					this.findCharges();
 					this.$nextTick(function() {
 						layui.use(['carousel', 'form'], function() {
 							var carousel = layui.carousel,
