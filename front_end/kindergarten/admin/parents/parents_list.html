@@ -56,13 +56,16 @@
 						<td>{{item.u_contract}}</td>
 						<td>{{item.u_address}}</td>
 						<td>{{item.count}}</td>
-						<td>{{item.createTime | dateFilter}}</td>
+						<td>{{item.total/100}}</td>
 						<td class="td-manage">
 							<a title="查看该家长孩子信息" v-on:click="findChil(item.p_id)" href="javascript:;">
 								<i class="layui-icon">&#xe655;</i>
 							</a>
 							<a title="编辑家长信息" v-on:click="editP(item.p_id)" href="javascript:;">
 								<i class="layui-icon">&#xe642;</i>
+							</a>
+							<a title="删除家长信息" v-on:click="deleteU(item.p_id)" href="javascript:;">
+								<i class="layui-icon">&#xe640;</i>
 							</a>
 						</td>
 					</tr>
@@ -166,10 +169,10 @@
 					},
 					deleteU: function(id) {
 						var _this = this;
-						layer.confirm("是否删除该用户？", {
+						layer.confirm("是否删除该家长信息？（注意：删除后学生信息也会被删除）", {
 							btn: ['确认', '取消'] //按钮
 						}, function() {
-							axios.post('/user/deleteUser/' + id).then(function(res) {
+							axios.post('/parents/deleteParents/' + id).then(function(res) {
 								if (res.data.code == 200) {
 									layer.alert('删除成功', {
 										icon: 6

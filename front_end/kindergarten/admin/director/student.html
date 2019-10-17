@@ -72,11 +72,11 @@
 						<td>{{item.gender | optStatusFilter}}</td>
 						<td>{{item.classId}}</td>
 						<td>
-							<a title="查看该家长孩子信息" v-on:click="findChil(item.id)" href="javascript:;">
-								<i class="layui-icon">&#xe655;</i>
-							</a>
-							<a title="编辑家长信息" v-on:click="editP(item.id)" href="javascript:;">
+							<a title="编辑学生信息" v-on:click="editP(item.id)" href="javascript:;">
 								<i class="layui-icon">&#xe642;</i>
+							</a>
+							<a title="删除学生信息" v-on:click="deleteU(item.id)" href="javascript:;">
+								<i class="layui-icon">&#xe640;</i>
 							</a>
 						</td>
 					</tr>
@@ -181,10 +181,10 @@
 					},
 					deleteU: function(id) {
 						var _this = this;
-						layer.confirm("是否删除该用户？", {
+						layer.confirm("是否删除该学生？", {
 							btn: ['确认', '取消'] //按钮
 						}, function() {
-							axios.post('/user/deleteUser/' + id).then(function(res) {
+							axios.post('/student/deleteStudent/' + id).then(function(res) {
 								if (res.data.code == 200) {
 									layer.alert('删除成功', {
 										icon: 6

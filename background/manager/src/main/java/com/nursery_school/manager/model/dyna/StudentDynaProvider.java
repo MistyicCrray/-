@@ -53,6 +53,12 @@ public class StudentDynaProvider {
 				if (map.get("matherName") != null) {
 					SET("mather_name=#{matherName}");
 				}
+				if (map.get("classId") != null) {
+					SET("class_id=#{classId}");
+				}
+				if (map.get("gender") != null) {
+					SET("gender=#{gender}");
+				}
 				WHERE("id=#{id}");
 			}
 		}.toString();

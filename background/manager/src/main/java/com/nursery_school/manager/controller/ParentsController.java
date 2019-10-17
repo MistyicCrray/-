@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.nursery_school.manager.model.Order;
 import com.nursery_school.manager.model.Parents;
 import com.nursery_school.manager.model.Student;
+import com.nursery_school.manager.service.OrderService;
 import com.nursery_school.manager.service.ParentService;
 import com.nursery_school.manager.service.StudentService;
 import com.nursery_school.manager.tools.LoginRequired;
@@ -32,6 +34,9 @@ public class ParentsController {
 
 	@Autowired
 	private StudentService studentService;
+	
+	@Autowired
+	private OrderService orderService;
 
 	// 查询用户和家长表（单个）
 	@LoginRequired(value = "3")
@@ -53,6 +58,14 @@ public class ParentsController {
 			mapstu.put("parentId", map2.get("p_id"));
 			List<Student> findByDyna = studentService.findByDyna(mapstu);
 			map2.put("count", findByDyna.size());
+			List<Order> findByDyna2 = orderService.findByDyna(mapstu);
+			int total = 0;
+			if (findByDyna2.size() != 0) {
+				for (Order order : findByDyna2) {
+					total += order.getPayMoney();
+				}
+			}
+			map2.put("total", total);
 		}
 		return ResultGenerator.genSuccessResult(new TableData<Map<String, Object>>(page.getTotal(), selectUserAnParents));
 	}
@@ -88,4 +101,11 @@ public class ParentsController {
 		return ResultGenerator.genSuccessResult(add);
 	}
 
+	// 添加家长信息
+	@LoginRequired(value = "3")
+	@RequestMapping(value = "/deleteParents/{id}", method = RequestMethod.POST)
+	public Result deleteParents(@PathVariable String id) {
+		parentService.delete(id);
+		return ResultGenerator.genSuccessResult("删除成功");
+	}
 }

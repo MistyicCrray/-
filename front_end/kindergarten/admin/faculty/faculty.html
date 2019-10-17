@@ -63,7 +63,7 @@
 							<a title="编辑教职工信息" v-on:click="editP(item.id)" href="javascript:;">
 								<i class="layui-icon">&#xe642;</i>
 							</a>
-							<a title="编辑教职工信息" v-on:click="deleteU(item.id)" href="javascript:;">
+							<a title="删除教职工信息" v-on:click="deleteU(item.id)" href="javascript:;">
 								<i class="layui-icon">&#xe640;</i>
 							</a>
 						</td>
@@ -108,7 +108,9 @@
 					total: 0,
 					pages: 0,
 					pageNum: 1,
-					inputtext: {},
+					inputtext: {
+						name:""
+					},
 					editInp: {}
 				},
 				methods: {
@@ -123,7 +125,7 @@
 								size: _this.pageSize
 							}
 						}).then(function(res) {
-							console.info(res.status);
+							console.info(res);
 							if (res.status == 202) {
 								alert("无权访问");
 								return;

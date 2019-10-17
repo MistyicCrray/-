@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nursery_school.manager.mapper.ParentsMapper;
+import com.nursery_school.manager.mapper.StudentMapper;
 import com.nursery_school.manager.mapper.UserMapper;
 import com.nursery_school.manager.model.Parents;
+import com.nursery_school.manager.model.Student;
 import com.nursery_school.manager.model.User;
 import com.nursery_school.manager.tools.MD5;
 import com.nursery_school.manager.tools.UUIDUtils;
@@ -23,6 +25,9 @@ public class ParentService {
 	@Autowired
 	private UserMapper userMapper;
 
+	@Autowired
+	private StudentMapper studentMapper;
+
 	// 添加
 	public Parents add(Map<String, Object> map) {
 		Parents parents = new Parents();
@@ -30,10 +35,10 @@ public class ParentService {
 		parents.setId(UUIDUtils.get16UUID());
 		parents.setName(map.get("name").toString());
 		Map<String, Object> userM = new HashMap<String, Object>();
-		
+
 		userM.put("loginName", map.get("contract").toString());
 		List<User> findByDymic = userMapper.findByDymic(userM);
-		if(findByDymic.size() != 0) {
+		if (findByDymic.size() != 0) {
 			return null;
 		}
 		parentsMapper.insert(parents);
@@ -51,6 +56,15 @@ public class ParentService {
 	}
 
 	public int delete(String id) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("parentId", id);
+		userMapper.deleteByParentId(id);
+		List<Student> findDyna = studentMapper.findDyna(map);
+		if (findDyna.size() != 0) {
+			for (Student student : findDyna) {
+				studentMapper.deleteByPrimaryKey(student.getId());
+			}
+		}
 		return parentsMapper.deleteByPrimaryKey(id);
 	}
 
@@ -75,9 +89,8 @@ public class ParentService {
 			userMapper.updateDymic(map);
 		}
 	}
-	
+
 	public Parents findParentById(String pid) {
 		return parentsMapper.selectByPrimaryKey(pid);
 	}
-
 }

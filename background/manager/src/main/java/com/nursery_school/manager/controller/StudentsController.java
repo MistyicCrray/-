@@ -76,4 +76,11 @@ public class StudentsController {
 		studentService.update(map);
 		return ResultGenerator.genSuccessResult("修改成功");
 	}
+	
+	@LoginRequired(value = "3")
+	@RequestMapping(value = "/deleteStudent/{id}", method = RequestMethod.POST)
+	public Result update(@PathVariable String id) {
+		studentService.delete(id);
+		return ResultGenerator.genSuccessResult("删除成功");
+	}
 }

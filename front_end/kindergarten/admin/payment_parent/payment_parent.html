@@ -57,12 +57,12 @@
 				<tbody>
 					<tr v-for="item,index in orders">
 						<td>{{index + 1}}</td>
-						<td>{{item.payStandard.schooling/100}}</td>
-						<td>{{item.payStandard.bookMoney/100}}</td>
-						<td>{{item.payStandard.boardAges/100}}</td>
-						<td>{{item.payStandard.quarterage/100}}</td>
+						<td>{{item.payStandard.schooling/100}}元</td>
+						<td>{{item.payStandard.bookMoney/100}}元</td>
+						<td>{{item.payStandard.boardAges/100}}元</td>
+						<td>{{item.payStandard.quarterage/100}}元</td>
 						<td>{{item.student.name}}</td>
-						<td>{{item.payStandard.schooling/100 + item.payStandard.bookMoney/100 + item.payStandard.boardAges/100 + item.payStandard.quarterage/100}}</td>
+						<td>{{item.payStandard.schooling/100 + item.payStandard.bookMoney/100 + item.payStandard.boardAges/100 + item.payStandard.quarterage/100}}元</td>
 						<td>{{item.payStandard.paymentDeadline | dateFilter}}</td>
 						<td>{{item.payStandard.year | dateFilter}}</td>
 						<td>{{item.state | optStatusFilter}}</td>

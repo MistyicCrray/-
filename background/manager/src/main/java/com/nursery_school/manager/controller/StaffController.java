@@ -1,6 +1,7 @@
 package com.nursery_school.manager.controller;
 
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import com.github.pagehelper.PageHelper;
 import com.nursery_school.manager.model.Staff;
 import com.nursery_school.manager.model.User;
 import com.nursery_school.manager.service.StaffService;
+import com.nursery_school.manager.service.UserService;
 import com.nursery_school.manager.tools.CurrentUser;
 import com.nursery_school.manager.tools.LoginRequired;
 import com.nursery_school.manager.tools.Result;
@@ -30,10 +32,16 @@ public class StaffController {
 	@Autowired
 	private StaffService staffService;
 
+	@Autowired
+	private UserService userService;
+
 	@LoginRequired(value = "3")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public Result add(@RequestBody Map<String, Object> map, @CurrentUser User currentUser) throws ParseException {
-		staffService.add(map);
+		Staff add = staffService.add(map);
+		if (add == null) {
+			return ResultGenerator.genFailResult("添加失败，账号重复");
+		}
 		return ResultGenerator.genSuccessResult("添加成功");
 	}
 
@@ -58,6 +66,12 @@ public class StaffController {
 			@CurrentUser User currentUser) {
 		Page<Staff> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
 		List<Staff> findByDyna = staffService.findByDyna(map);
+		for (Staff staff : findByDyna) {
+			Map<String, Object> staffMap = new HashMap<String, Object>();
+			staffMap.put("staffId", staff.getId());
+			List<User> findDymic = userService.findDymic(staffMap);
+			staff.setUser(findDymic.get(0));
+		}
 		return ResultGenerator.genSuccessResult(new TableData<Staff>(page.getTotal(), findByDyna));
 	}
 }
