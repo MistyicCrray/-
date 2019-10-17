@@ -1,6 +1,0 @@
-#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
-#Tue Sep 24 22:30:09 CST 2019
-https\://dl.bintray.com/jwtk/coveralls-maven-plugin/.error=Could not transfer artifact com.fasterxml.jackson.core\:jackson-databind\:jar\:2.8.9 from/to bintray-jwtk-coveralls-maven-plugin (https\://dl.bintray.com/jwtk/coveralls-maven-plugin)\: The operation was cancelled.
-@default-bintray-jwtk-coveralls-maven-plugin-https\://dl.bintray.com/jwtk/coveralls-maven-plugin/.lastUpdated=1569335409619
-@default-central-https\://repo.maven.apache.org/maven2/.lastUpdated=1569335409411
-https\://repo.maven.apache.org/maven2/.error=Could not transfer artifact com.fasterxml.jackson.core\:jackson-databind\:jar\:2.8.9 from/to central (https\://repo.maven.apache.org/maven2)\: The operation was cancelled.

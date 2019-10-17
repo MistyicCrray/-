@@ -47,10 +47,8 @@ public class PayStandardController {
 		return ResultGenerator.genSuccessResult("添加成功");
 	}
 
-	@LoginRequired(value = "3")
 	@RequestMapping(value = "/findByList", method = RequestMethod.GET)
-	public Result findByList(@RequestParam(required = false) Map<String, Object> map, Integer pageNum, Integer size,
-			@CurrentUser User user) {
+	public Result findByList(@RequestParam(required = false) Map<String, Object> map, Integer pageNum, Integer size) {
 		Page<PayStandard> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
 		List<PayStandard> findByList = payStandardService.selectProvider(map);
 		return ResultGenerator.genSuccessResult(new TableData<PayStandard>(page.getTotal(), findByList));

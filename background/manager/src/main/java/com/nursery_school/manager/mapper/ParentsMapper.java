@@ -141,10 +141,9 @@ public interface ParentsMapper {
         "SELECT ts.id as s_id,ts.name as s_name,ts.contract as s_contract,ts.address as s_address,"
         + "ts.in_date as s_inDte,ts.parent_id as s_parentId,ts.student_id as s_studentId,ts.father_tel as s_fatherTel,ts.mather_tel as s_matherTel,"
         + "ts.father_name as s_fatherName,ts.mather_name as s_matherName,ts.birthday as s_birthday,ts.gender as s_gender,ts.class_id as s_classId,tp.id as p_id,"
-        + "tp.name as p_name,count(*) as count FROM t_student ts, t_parents tp where ts.parent_id=tp.id and ts.parent_id=#{parentId}"
+        + "tp.name as p_name FROM t_student ts LEFT JOIN t_parents tp on ts.parent_id=tp.id where ts.parent_id=#{parentId}"
     })
     @Results({
-    	@Result(column="count", property="count", jdbcType=JdbcType.INTEGER),
     	@Result(column="p_id", property="p_id", jdbcType=JdbcType.VARCHAR, id=true),
         @Result(column="p_name", property="p_name", jdbcType=JdbcType.VARCHAR),
         @Result(column="s_id", property="s_id", jdbcType=JdbcType.VARCHAR, id=true),
