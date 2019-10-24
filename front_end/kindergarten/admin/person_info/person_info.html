@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="../../css/font.css">
+		<link rel="stylesheet" href="../../css/xadmin.css">
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/xadmin.js"></script>
+	</head>
+	<body>
+		<div class="layui-form" action="">
+			<div class="layui-form-item">
+				<label class="layui-form-label">旧密码</label>
+				<div class="layui-input-inline">
+					<input type="password" name="password" v-model="inputtext.oldP" placeholder="旧密码" autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-form-mid layui-word-aux" style="color: red;">必填</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">新密码</label>
+				<div class="layui-input-inline">
+					<input type="password" name="password" v-model="inputtext.newP" placeholder="新密码" autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-form-mid layui-word-aux" style="color: red;">必填</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">确认密码</label>
+				<div class="layui-input-inline">
+					<input type="password" name="password" v-model="inputtext.confirmP" placeholder="确认密码" autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-form-mid layui-word-aux" style="color: red;">必填</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<button class="layui-btn" type="button" v-on:click="submit">立即修改</button>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../js/vue-2.5.17.min.js"></script>
+	<script type="text/javascript" src="../../js/axios-0.18.min.js"></script>
+	<script type="text/javascript" src="../../js/moment.min.js"></script>
+	<script type="text/javascript" src="../../js/vue-main.js"></script>
+	<script>
+		var vue = new Vue({
+			data: {
+				inputtext: {
+					oldP: '',
+					newP: '',
+					confirmP: ''
+				}
+			},
+			methods: {
+				submit: function() {
+					if (inputtext.oldP == '') {
+						layer.alert("旧密码不能为空", {
+							icon: 5
+						});
+						return;
+					}
+					if (inputtext.newP == '') {
+						layer.alert("新密码不能为空", {
+							icon: 5
+						});
+						return;
+					}
+					if (inputtext.confirmP == '') {
+						layer.alert("确认密码不能为空", {
+							icon: 5
+						});
+						return;
+					}
+					if (inputtext.newP != inputtext.confirmP) {
+						layer.alert("密码和确认密码不一致", {
+							icon: 5
+						});
+						return;
+					}
+				}
+			},
+			created: function() {
+
+			}
+		})
+	</script>
+</html>
