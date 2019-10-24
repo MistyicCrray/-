@@ -4,37 +4,38 @@
 		<meta charset="utf-8">
 		<title></title>
 	</head>
-	<link rel="stylesheet" href="lib/layui/css/layui.css" />
-	<script src="lib/layui/layui.all.js"></script>
+	<link rel="stylesheet" href="../css/font.css">
+	<link rel="stylesheet" href="../css/xadmin.css">
+	<link rel="stylesheet" href="../lib/layui/css/layui.css" />
+	<script src="../lib/layui/layui.all.js"></script>
 	<body>
 		<div id="main">
-			
+
 		</div>
-		
-		
-		<script src="js/vue-2.5.17.min.js"></script>
-		<script src="js/axios-0.18.min.js"></script>
-		<script src="js/moment.min.js"></script>
-		<script src="js/vue-main.js"></script>
+
+
+		<script src="../js/vue-2.5.17.min.js"></script>
+		<script src="../js/axios-0.18.min.js"></script>
+		<script src="../js/moment.min.js"></script>
+		<script src="../js/vue-main.js"></script>
 		<script>
 			var id = GetQueryString("id");
 			var vue = new Vue({
 				el: "#main",
 				data: {
 					childrens: "",
-					breakfastFoods: [],
-					lunchFoods: [],
-					dinnerFoods: []
 				},
 				methods: {
 					getStudent: function() {
 						var _this = this;
-						axios.get('/dishesDaily/findById/' + id).then(function(res) {
+						axios.get('/cleaningInfo/find', {
+							params: {
+								cleaningId: id,
+								size: 1000
+							}
+						}).then(function(res) {
 							console.info(res);
-							_this.childrens = res.data.data;
-							_this.breakfastFoods = _this.childrens.breakfastDishes;
-							_this.lunchFoods = _this.childrens.lunchDishes;
-							_this.dinnerFoods = _this.childrens.dinnerDishes;
+							_this.childrens = res.data.data.rows;
 						})
 					},
 				},

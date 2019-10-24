@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>去哪儿买后台管理系统</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		<link rel="stylesheet" href="../css/font.css">
+		<link rel="stylesheet" href="../css/xadmin.css">
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script src="../lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../js/xadmin.js"></script>
+	</head>
+	<style type="text/css">
+		/*重置样式开始*/
+
+		body {
+			margin: 0;
+			padding: 0;
+		}
+
+		/*重置样式结束*/
+
+		.sta_top {
+			position: relative;
+			overflow: hidden;
+			border-bottom: 1px solid #EBEDF2;
+			-webkit-box-shadow: 0 0 4px 2px #EBEDF2;
+			box-shadow: 0 0 4px 2px #EBEDF2;
+		}
+
+		.sta_top_li {
+			padding: 15px;
+			float: left;
+			width: 25%;
+			height: 80px;
+			text-align: center;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			border-left: 1px solid #EBEDF2;
+		}
+
+		.sta_con {
+			margin: 20px 15px;
+			padding: 15px;
+			border: 1px solid #EBEDF2;
+			-webkit-box-shadow: 0 0 4px 2px #EBEDF2;
+			box-shadow: 0 0 4px 2px #EBEDF2;
+			height: 400px;
+		}
+	</style>
+
+	<body>
+		<div class="x-body layui-anim layui-anim-up" id="app">
+			<blockquote class="layui-elem-quote">欢迎{{user.username}}{{user.userType | userTypeFilter}}！当前时间:{{nowTime}}</blockquote>
+			<fieldset class="layui-elem-field" v-if="userType!=1">
+				<legend>数据统计</legend>
+				<div class="layui-field-box">
+					<div class="layui-col-md12">
+						<div class="layui-card">
+							<div class="layui-card-body">
+								<div class="layui-carousel x-admin-carousel x-admin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none"
+								 style="width: 100%; height: 90px;">
+									<div carousel-item="">
+										<ul class="layui-row layui-col-space10 layui-this">
+											<li class="layui-col-xs2">
+												<a href="javascript:;" class="x-admin-backlog-body">
+													<h3>用户数量</h3>
+													<p>
+														<cite>{{usersQuantity}}</cite></p>
+												</a>
+											</li>
+											<li class="layui-col-xs2">
+												<a href="javascript:;" class="x-admin-backlog-body">
+													<h3>学生数量</h3>
+													<p>
+														<cite>{{childrensQuantity}}</cite></p>
+												</a>
+											</li>
+											<li class="layui-col-xs2">
+												<a href="javascript:;" class="x-admin-backlog-body">
+													<h3>教职工数量</h3>
+													<p>
+														<cite>{{staffQuantity}}</cite></p>
+												</a>
+											</li>
+											<!-- <li class="layui-col-xs2">
+												<a href="javascript:;" class="x-admin-backlog-body">
+													<h3>总交易额</h3>
+													<p>
+														<cite>{{payment}}</cite></p>
+												</a>
+											</li> -->
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="order" style="width: 1000px;height:300px;"></div>
+			</fieldset>
+		</div>
+		<script type="text/javascript" src="../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="../js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="../js/vue-main.js"></script>
+		<script type="text/javascript">
+			userType = ['管理员', '家长', '老师', '园长', '厨师', '卫生管理员']
+			layui.use('laydate', function() {
+				var laydate = layui.laydate;
+				//执行一个laydate实例
+				laydate.render({
+					elem: '#year' //指定元素
+						,
+					type: 'year'
+				});
+			});
+			var app = new Vue({
+				el: '#app',
+				data: {
+					user: sessionStorage,
+					islogin: sessionStorage.length > 0,
+					nowTime: "",
+					childrensQuantity: 0,
+					usersQuantity: 0,
+					staffQuantity: 0,
+					data: "",
+					payment: 0,
+					pageSize:10000
+				},
+				methods: {
+					getStudent: function() {
+						var _this = this;
+						axios.get('/student/findByDyna', {
+							params: {
+								size: _this.pageSize
+							}
+						}).then(function(res) {
+							console.info(res)
+							_this.childrensQuantity = res.data.data.rows.length;
+						})
+					},
+					getUsers: function() {
+						var _this = this;
+						axios.get('/user/findAllUser', {
+							params: {
+								size: _this.pageSize
+							}
+						}).then(function(res) {
+							console.info(res)
+							_this.usersQuantity = res.data.data.rows.length;
+						})
+					},
+					getStaff: function() {
+						var _this = this;
+						axios.get('/staff/find', {
+							params: {
+								size: _this.pageSize
+							}
+						}).then(function(res) {
+							console.info(res)
+							_this.staffQuantity = res.data.data.rows.length;
+						})
+					},
+				},
+				mounted: function() {
+					let _this = this; // 声明一个变量指向Vue实例this，保证作用域一致
+					_this.timeFormate = setInterval(() => {
+						var timeStamp = new Date();
+						let year = new Date(timeStamp).getFullYear();
+						let month = new Date(timeStamp).getMonth() + 1 < 10 ? "0" + (new Date(timeStamp).getMonth() + 1) : new Date(
+							timeStamp).getMonth() + 1;
+						let date = new Date(timeStamp).getDate() < 10 ? "0" + new Date(timeStamp).getDate() : new Date(timeStamp).getDate();
+						let hh = new Date(timeStamp).getHours() < 10 ? "0" + new Date(timeStamp).getHours() : new Date(timeStamp).getHours();
+						let mm = new Date(timeStamp).getMinutes() < 10 ? "0" + new Date(timeStamp).getMinutes() : new Date(timeStamp)
+							.getMinutes();
+						let ss = new Date(timeStamp).getSeconds() < 10 ? "0" + new Date(timeStamp).getSeconds() : new Date(timeStamp)
+							.getSeconds();
+						_this.nowTime = year + "年" + month + "月" + date + "日" + " " + hh + ":" + mm + ":" + ss;
+					}, 1000);
+				},
+				created: function() {
+					this.getStudent();
+					this.getUsers();
+					this.getStaff();
+				},
+				filters: {
+					userTypeFilter: function(value) {
+						return userType[value]
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

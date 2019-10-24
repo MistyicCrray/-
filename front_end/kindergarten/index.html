@@ -5,6 +5,11 @@
 		<title>首页</title>
 		<link rel="stylesheet" href="lib/layui/css/layui.css" />
 		<script src="lib/layui/layui.all.js"></script>
+		<link rel="stylesheet" href="css/font.css">
+		<link rel="stylesheet" href="css/xadmin.css">
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script type="text/javascript" src="lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="js/xadmin.js"></script>
 	</head>
 	<style type="text/css">
 		.class_d {
@@ -35,7 +40,7 @@
 						<li class="layui-nav-item"><a href="">产品</a></li>
 						<li class="layui-nav-item"><a href="">大数据</a></li>
 						<li class="layui-nav-item"><a href="javascript:;">解决方案</a></li>
-						<li class="layui-nav-item"><a href="">社区</a></li>
+						<li class="layui-nav-item"><a href="admin/index.html">后台页面</a></li>
 					</ul>
 				</div>
 			</div>
@@ -213,7 +218,7 @@
 							shadeClose: true,
 							closeBtn: 1,
 							scrollbar: true,
-							area: ['600px', '400px'],
+							area: ['100%', '100%'],
 							content: ['detail/dishesDetail.html?id=' + id],
 						})
 					},
@@ -231,8 +236,8 @@
 							shadeClose: true,
 							closeBtn: 1,
 							scrollbar: true,
-							area: ['600px', '400px'],
-							content: ['detail/cleaningDetail.html?id=' + id],
+							area: ['100%', '100%'],
+							content: ['admin/health/cleanInfo/cleanInfo.html?id=' + id],
 						})
 					},
 					findCharges: function() {
@@ -249,7 +254,7 @@
 							shadeClose: true,
 							closeBtn: 1,
 							scrollbar: true,
-							area: ['600px', '400px'],
+							area: ['100%', '100%'],
 							content: ['detail/chargeDetail.html?id=' + id],
 						})
 					},

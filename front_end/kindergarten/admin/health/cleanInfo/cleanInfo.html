@@ -16,7 +16,7 @@
 
 	<body>
 		<div class="x-nav">
-			<span class="layui-breadcrumb">
+			<span class="layui-breadcrumb" v-if="userType==5">
 				<a href="">首页</a>
 				<a href="">卫生管理</a>
 				<a>
@@ -36,7 +36,7 @@
 						<th>清扫开始时间</th>
 						<th>清扫结束时间</th>
 						<th>图片</th>
-						<th>操作</th>
+						<th v-if="userType==5">操作</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -46,7 +46,7 @@
 						<td>{{item.cleanStartTime | dateFilter}}</td>
 						<td>{{item.cleanEndTime | dateFilter}}</td>
 						<td v-on:click="chkanPic('/images/'+item.img)"><img v-bind:src="'/images/'+item.img"/></td>
-						<td>
+						<td v-if="userType==5">
 							<a title="编辑卫生条目" v-on:click="editP(item.id)" href="javascript:;">
 								<i class="layui-icon">&#xe642;</i>
 							</a>
@@ -96,6 +96,7 @@
 					total: 0,
 					pages: 0,
 					pageNum: 1,
+					userType: sessionStorage.getItem('userType')
 				},
 				methods: {
 					getStudent: function(pageIndex) {
