@@ -62,10 +62,10 @@
 						<td>{{item.paymentDeadline | dateFilter}}</td>
 						<td><a href="javascript:;" v-on:click="check_file(item.file)">点击预览收费标准文件</a></td>
 						<td>
-							<a title="编辑" v-on:click="editP(item.id)" href="javascript:;">
+							<a title="编辑" v-on:click="editP(item.id)" href="javascript:;" v-if="userType==3">
 								<i class="layui-icon">&#xe642;</i>
 							</a>
-							<a title="删除" v-on:click="deleteU(item.id)" href="javascript:;">
+							<a title="删除" v-on:click="deleteU(item.id)" href="javascript:;" v-if="userType==3">
 								<i class="layui-icon">&#xe640;</i>
 							</a>
 							<a title="下载" v-bind:href="'/images/' + item.file">
@@ -113,7 +113,8 @@
 					pages: 0,
 					pageNum: 1,
 					inputtext: {},
-					editInp: {}
+					editInp: {},
+					userType: localStorage.getItem('userType')
 				},
 				methods: {
 					getStudent: function(pageIndex) {

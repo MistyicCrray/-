@@ -20,7 +20,6 @@
 					<label class="layui-form-label">请选择发送的老师</label>
 					<div class="layui-input-inline">
 						<select name="modules" lay-verify="required" lay-search="" id="select_list">
-							<option value="">直接选择或搜索选择</option>
 						</select>
 					</div>
 				</div>
@@ -52,8 +51,8 @@
 		<script type="text/javascript" src="../../js/axios-0.18.min.js"></script>
 		<script type="text/javascript" src="../../js/moment.min.js"></script>
 		<script type="text/javascript" src="../../js/vue-main.js"></script>
-		<script type="text/javascript" src="../../kindeditor/kindeditor-all-min.js"></script>
-		<script type="text/javascript" src="../../kindeditor/lang/zh-CN.js"></script>
+		<script type="text/javascript" src="../../lib/kindeditor/kindeditor-all-min.js"></script>
+		<script type="text/javascript" src="../../lib/kindeditor/lang/zh-CN.js"></script>
 
 		<script>
 			var editor = null;
@@ -135,6 +134,14 @@
 				},
 				created: function() {
 					this.getStudent();
+				},
+				updated: function() {
+					layui.use('form', function() {
+						var form = layui.form;
+						form.on('select(select_list)', function() {
+						});
+						form.render();
+					});
 				}
 			})
 		</script>

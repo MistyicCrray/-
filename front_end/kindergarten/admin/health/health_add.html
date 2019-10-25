@@ -20,7 +20,6 @@
 					<label class="layui-form-label">清扫计划</label>
 					<div class="layui-input-inline">
 						<select name="cleaningId" lay-verify="required" lay-search="" id="select_list">
-							<option value="">直接选择或搜索选择</option>
 						</select>
 					</div>
 				</div>
@@ -135,24 +134,30 @@
 					}
 				},
 				created: function() {
-					this.$nextTick(function() {
-						var _this = this;
-						axios.get('/cleaning/find', {
-							params: {
-								size: 1000
-							}
-						}).then(function(res) {
-							console.info(res);
-							_this.healthPlan = res.data.data.rows;
-							var table = document.body.querySelector('#select_list');
-							for (var i = 0; i < _this.healthPlan.length; i++) {
-								console.info(_this.healthPlan[i].id + _this.healthPlan[i].site);
-								var option = document.createElement('option');
-								option.value = _this.healthPlan[i].id;
-								option.innerText = _this.healthPlan[i].site;
-								table.appendChild(option);
-							}
-						})
+					var _this = this;
+					axios.get('/cleaning/find', {
+						params: {
+							size: 1000
+						}
+					}).then(function(res) {
+						console.info(res);
+						_this.healthPlan = res.data.data.rows;
+						var table = document.body.querySelector('#select_list');
+						for (var i = 0; i < _this.healthPlan.length; i++) {
+							console.info(_this.healthPlan[i].id + _this.healthPlan[i].site);
+							var option = document.createElement('option');
+							option.value = _this.healthPlan[i].id;
+							option.innerText = _this.healthPlan[i].site;
+							table.appendChild(option);
+						}
+					})
+				},
+				updated: function() {
+					layui.use('form', function() {
+						var form = layui.form;
+						form.on('select(select_list)', function() {
+						});
+						form.render();
 					});
 				}
 			})

@@ -15,11 +15,11 @@
 
 	<body>
 		<div class="x-body" id="main">
-			<div class="layui-form">
+			<form class="layui-form">
 				<div class="layui-form-item">
 					<label class="layui-form-label">选择学生家长</label>
 					<div class="layui-input-inline">
-						<select id="select_list">
+						<select id="select_list" lay-verify="required" lay-search="">
 							<option v-for="item in parents" v-bind:value="item.p_id">{{item.p_name}}</option>
 						</select>
 					</div>
@@ -118,7 +118,7 @@
 						添加
 					</button>
 				</div>
-			</div>
+			</form>
 		</div>
 		<script type="text/javascript" src="../../js/jquery.min.js"></script>
 		<script type="text/javascript" src="../../js/vue-2.5.17.min.js"></script>
@@ -192,24 +192,22 @@
 					}
 				},
 				created: function() {
-					this.$nextTick(function() {
-						var _this = this;
-						axios.get('/parents/findUserAnParents', {
-							params: {
-								size: 1000
-							}
-						}).then(function(res) {
-							console.info(res);
-							_this.parents = res.data.data.rows;
-							// var table = document.body.querySelector('#select_list');
-							// for (var i = 0; i < _this.parents.length; i++) {
-							// 	console.info(_this.parents[i].p_id + _this.parents[i].u_name);
-							// 	var option = document.createElement('option');
-							// 	option.value = _this.parents[i].p_id;
-							// 	option.innerText = _this.parents[i].p_name;
-							// 	table.appendChild(option);
-							// }
-						})
+					var _this = this;
+					axios.get('/parents/findUserAnParents', {
+						params: {
+							size: 1000
+						}
+					}).then(function(res) {
+						console.info(res);
+						_this.parents = res.data.data.rows;
+					})
+				},
+				updated: function() {
+					layui.use('form', function() {
+						var form = layui.form;
+						form.on('select(select_list)', function() {
+						});
+						form.render();
 					});
 				}
 			})
