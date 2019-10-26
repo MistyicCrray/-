@@ -28,14 +28,14 @@
 				<i class="layui-icon" style="line-height:30px">ဂ</i></a>
 		</div>
 		<div class="x-body" id="main">
-			<div class="layui-row">
-				<div class="layui-form layui-col-md12 x-so">
-					<input type="text" v-model="inputtext.name" placeholder="姓名或联系方式" autocomplete="off" class="layui-input">
-					<button class="layui-btn" v-on:click="getStudent(1)"><i class="layui-icon">&#xe615;</i></button>
-				</div>
+			<div class="layui-input-inline">
+				<select v-model="inputtext.status" id="status">
+					<option v-bind:value="'0'">未缴费</option>
+					<option v-bind:value="'1'">已缴费</option>
+				</select>
 			</div>
+			<button class="layui-btn" type="button" v-on:click="getStudent()"><i class="layui-icon">&#xe615;</i></button>
 			<xblock>
-				<!-- <button class="layui-btn" onclick="x_admin_show('添加学信生息','student_add.html')"><i class="layui-icon"></i>添加</button> -->
 				<span class="x-right" style="line-height:40px">共有数据：{{total}} 条</span>
 			</xblock>
 			<table class="layui-table">
@@ -73,25 +73,27 @@
 				</tbody>
 			</table>
 			<div class="page">
-				<a class="prev" href="javascript:void(0)" v-on:click="prePage">&lt;&lt;</a>
-				<template v-for="(item,index) in pages">
-					<template v-if="pageNum!=2&&pages!=2&&pages!=1 && pageNum==1 && item<pageNum+5 && item>pageNum-5">
-						<a href="javascript:void(0)" v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
+				<div>
+					<a class="prev" href="javascript:void(0)" v-on:click="prePage">&lt;&lt;</a>
+					<template v-for="(item,index) in pages">
+						<template v-if="pageNum!=2&&pages!=2&&pages!=1 && pageNum==1 && item<pageNum+5 && item>pageNum-5">
+							<a href="javascript:void(0)" v-bind:class="{ 'current': pageNum == item}" v-on:click="pageClick(item)">{{item}}</a>
+						</template>
+						<template v-if="pageNum==2 && item<pageNum+4 && item>pageNum-4">
+							<a href="javascript:void(0)" v-bind:class="{ 'current': pageNum == item}" v-on:click="pageClick(item)">{{item}}</a>
+						</template>
+						<template v-if="pageNum>2 && item<pageNum+3 && item>pageNum-3 && pageNum<pages-1">
+							<a href="javascript:void(0)" v-bind:class="{ 'current': pageNum == item}" v-on:click="pageClick(item)">{{item}}</a>
+						</template>
+						<template v-if="pageNum!=2&&pageNum==pages-1 && item>pageNum-4">
+							<a href="javascript:void(0)" v-bind:class="{ 'current': pageNum == item}" v-on:click="pageClick(item)">{{item}}</a>
+						</template>
+						<template v-if="pageNum!=2&&pageNum==pages && item>pageNum-5">
+							<a href="javascript:void(0)" v-bind:class="{ 'current': pageNum == item}" v-on:click="pageClick(item)">{{item}}</a>
+						</template>
 					</template>
-					<template v-if="pageNum==2 && item<pageNum+4 && item>pageNum-4">
-						<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
-					</template>
-					<template v-if="pageNum>2 && item<pageNum+3 && item>pageNum-3 && pageNum<pages-1">
-						<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
-					</template>
-					<template v-if="pageNum!=2&&pageNum==pages-1 && item>pageNum-4">
-						<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
-					</template>
-					<template v-if="pageNum!=2&&pageNum==pages && item>pageNum-5">
-						<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
-					</template>
-				</template>
-				<a class="next" href="javascript:void(0)" v-on:click="nextPage">&gt;&gt;</a>
+					<a class="next" href="javascript:void(0)" v-on:click="nextPage">&gt;&gt;</a>
+				</div>
 			</div>
 		</div>
 		<script type="text/javascript" src="../../js/jquery.min.js"></script>
@@ -110,7 +112,6 @@
 					pages: 0,
 					pageNum: 1,
 					inputtext: {},
-					editInp: {}
 				},
 				methods: {
 					getStudent: function(pageIndex) {
@@ -118,9 +119,9 @@
 						var _this = this;
 						axios.get('/order/findOrderByLeader', {
 							params: {
-								name: _this.inputtext.name == "" ? null : _this.inputtext.name,
 								pageNum: pageIndex,
-								size: _this.pageSize
+								size: _this.pageSize,
+								state: $("#status").val() == "" ? null : $("#status").val(),
 							}
 						}).then(function(res) {
 							console.info(res);
@@ -152,10 +153,6 @@
 							return;
 						}
 						this.getStudent(this.pageNum);
-					},
-					logout: function() {
-						logout();
-						location.href = "login.html";
 					},
 				},
 				created: function() {

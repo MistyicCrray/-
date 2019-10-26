@@ -10,7 +10,7 @@
 		<script type="text/javascript" src="../../js/xadmin.js"></script>
 	</head>
 	<body>
-		<div class="layui-form" action="">
+		<div class="layui-form" id="main">
 			<div class="layui-form-item">
 				<label class="layui-form-label">旧密码</label>
 				<div class="layui-input-inline">
@@ -34,7 +34,7 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-input-block">
-					<button class="layui-btn" type="button" v-on:click="submit">立即修改</button>
+					<button class="layui-btn" v-on:click="submit">立即修改</button>
 				</div>
 			</div>
 		</div>
@@ -46,39 +46,49 @@
 	<script type="text/javascript" src="../../js/vue-main.js"></script>
 	<script>
 		var vue = new Vue({
+			el: '#main',
 			data: {
-				inputtext: {
-					oldP: '',
-					newP: '',
-					confirmP: ''
-				}
+				inputtext: {}
 			},
 			methods: {
 				submit: function() {
-					if (inputtext.oldP == '') {
+					var _this = this;
+					if (_this.inputtext.oldP == undefined) {
 						layer.alert("旧密码不能为空", {
 							icon: 5
 						});
 						return;
 					}
-					if (inputtext.newP == '') {
+					if (_this.inputtext.newP == undefined) {
 						layer.alert("新密码不能为空", {
 							icon: 5
 						});
 						return;
 					}
-					if (inputtext.confirmP == '') {
+					if (_this.inputtext.confirmP == undefined) {
 						layer.alert("确认密码不能为空", {
 							icon: 5
 						});
 						return;
 					}
-					if (inputtext.newP != inputtext.confirmP) {
+					if (_this.inputtext.newP != _this.inputtext.confirmP) {
 						layer.alert("密码和确认密码不一致", {
 							icon: 5
 						});
 						return;
 					}
+					axios.post('/user/updatePwd/' + _this.inputtext.newP + "/" + _this.inputtext.oldP).then(function(res) {
+						console.info(res);
+						if (res.data.code==200) {
+							layer.alert("修改成功", {
+								icon: 6
+							});
+						} else {
+							layer.alert(res.data.data, {
+								icon: 5
+							});
+						}
+					})
 				}
 			},
 			created: function() {

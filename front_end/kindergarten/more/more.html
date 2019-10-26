@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>首页</title>
+		<link rel="stylesheet" href="lib/layui/css/layui.css" />
+		<script src="../lib/layui/layui.all.js"></script>
+		<link rel="stylesheet" href="../css/font.css">
+		<link rel="stylesheet" href="../css/xadmin.css">
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../js/xadmin.js"></script>
+	</head>
+	<style type="text/css">
+		.class_d {
+			width: 70%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			float: left;
+		}
+
+		.layui-nav-tree {
+			width: 100%;
+		}
+
+		.layui-nav-child dd a {
+			color: white;
+		}
+	</style>
+	<body>
+		<div class="layui-container" id="main">
+			<div class="layui-col-xs12">
+				<img src="../img/banner_img_24.jpg" width="100%" />
+			</div>
+			<div class="layui-col-xs12">
+				<ul class="layui-nav layui-bg-blue">
+					<li class="layui-nav-item"><a href="../index.html">首页</a></li>
+					<li class="layui-nav-item"><a href="detail.html">园所介绍</a></li>
+					<li class="layui-nav-item"><a href="admissions.html">招生简介</a></li>
+					<li class="layui-nav-item"><a href="features.html">园内特色</a></li>
+					<li class="layui-nav-item"><a href="../admin/index.html">后台页面</a></li>
+				</ul>
+			</div>
+			<div class="layui-col-xs2" style="margin-top: 50px;">
+				<ul class="layui-nav layui-nav-tree layui-inline layui-bg-blue">
+					<li class="layui-nav-item layui-nav-itemed">
+						<dl class="layui-nav-child">
+							<dd class="layui-this"><a href="javascript:;" style="color: white;" v-on:click="findMenu(1)">日常菜式</a></dd>
+							<dd><a href="javascript:;" style="color: white;" v-on:click="findMenu(2)">清扫计划</a></dd>
+							<dd><a href="javascript:;" style="color: white;" v-on:click="findMenu(3)">收费标准</a></dd>
+						</dl>
+					</li>
+				</ul>
+			</div>
+			<div class="layui-col-xs8">
+				<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+					<div class="layui-tab-content" style="height: 100px;margin-left: 20px;">
+						<div class="layui-tab-item layui-show" id="dishes">
+							<ul style="line-height: 50px;">
+								<li v-for="item in dishes">
+									<div class="class_d">
+										<a href="#" v-on:click="checkDishesDetail(item.id)">{{item.dishesDate | dateFilter}}日菜式</a>
+									</div>
+									<span style="width: 30%;">【{{item.dishesDate | dateFilter}}】</span>
+								</li>
+							</ul>
+						</div>
+						<div class="layui-tab-item" id="cleaning">
+							<ul style="line-height: 50px;">
+								<li v-for="item in clean">
+									<div class="class_d">
+										<a href="#" v-on:click="checkCleaningDetail(item.id)">{{item.site}}</a>
+									</div>
+									<span style="width: 30%;">【2019-09-09】</span>
+								</li>
+							</ul>
+						</div>
+						<div class="layui-tab-item" id="charge">
+							<ul style="line-height: 50px;">
+								<li v-for="item in payStandards">
+									<div class="class_d">
+										<a href="#" v-on:click="checkChargeDetail(item.id)">{{item.year | dateFilter}}收费标准</a>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-footer">
+				<div class="">
+
+				</div>
+			</div>
+		</div>
+		<script src="../js/vue-2.5.17.min.js"></script>
+		<script src="../js/axios-0.18.min.js"></script>
+		<script src="../js/moment.min.js"></script>
+		<script src="../js/vue-main.js"></script>
+		<script>
+			var vue = new Vue({
+				el: "#main",
+				data: {
+					user: {},
+					inputtext: {
+						loginName: '',
+						password: ''
+					},
+					dishes: [],
+					clean: [],
+					payStandards: []
+				},
+				methods: {
+					login: function() {
+						var _this = this;
+						if (_this.inputtext.loginName == "") {
+							layer.alert('请输入用户名', {
+								icon: 5
+							});
+							return;
+						}
+						if (_this.inputtext.password == "") {
+							layer.alert('请输入密码', {
+								icon: 5
+							});
+							return;
+						}
+						axios.post('/user/login', _this.inputtext)
+							.then(function(response) {
+								console.info(response.data.code);
+								if (response.data.code == 200) {
+									sessionStorage.setItem("userId", response.data.data.userInfo.id);
+									sessionStorage.setItem("username", response.data.data.userInfo.name);
+									sessionStorage.setItem("accessToken", response.data.data.accessToken);
+									sessionStorage.setItem("userType", response.data.data.userInfo.userType);
+									layer.alert("登录成功");
+									window.location.href = 'admin/index.html';
+								} else {
+									layer.alert(response.data.message);
+								}
+
+							})
+							.catch(function(err) {
+
+							});
+					},
+					findDishes: function() {
+						var _this = this;
+						axios.get('/dishesDaily/find', {
+							params: {
+								size: 1000
+							}
+						}).then(function(res) {
+							console.info(res);
+							_this.dishes = res.data.data.rows;
+						})
+					},
+					checkDishesDetail: function(id) {
+						layer.open({
+							type: 2,
+							title: '菜品详情',
+							shadeClose: true,
+							closeBtn: 1,
+							scrollbar: true,
+							area: ['100%', '100%'],
+							content: ['../detail/dishesDetail.html?id=' + id],
+						})
+					},
+					findCleaning: function() {
+						var _this = this;
+						axios.get('/cleaning/find', {
+							params: {
+								size: 1000
+							}
+						}).then(function(res) {
+							console.info(res);
+							_this.clean = res.data.data.rows;
+						})
+					},
+					checkCleaningDetail: function(id) {
+						layer.open({
+							type: 2,
+							title: '清洁信息',
+							shadeClose: true,
+							closeBtn: 1,
+							scrollbar: true,
+							area: ['100%', '100%'],
+							content: ['../admin/health/cleanInfo/cleanInfo.html?id=' + id],
+						})
+					},
+					findCharges: function() {
+						var _this = this;
+						axios.get('/payStandard/findByList', {
+							params: {
+								size: 1000
+							}
+						}).then(function(res) {
+							console.info(res);
+							_this.payStandards = res.data.data.rows;
+						})
+					},
+					checkChargeDetail: function(id) {
+						layer.open({
+							type: 2,
+							title: '收费标准',
+							shadeClose: true,
+							closeBtn: 1,
+							scrollbar: true,
+							area: ['100%', '100%'],
+							content: ['../admin/charge/charge.html?id=' + id],
+						})
+					},
+					findMenu: function(value) {
+						switch (value) {
+							case 1:
+								document.getElementById("dishes").className = "layui-tab-item layui-show";
+								document.getElementById('charge').className = "layui-tab-item";
+								document.getElementById("cleaning").className = "layui-tab-item";
+								break;
+							case 2:
+								document.getElementById("cleaning").className = "layui-tab-item layui-show";
+								document.getElementById('charge').className = "layui-tab-item";
+								document.getElementById("dishes").className = "layui-tab-item";
+								break;
+							case 3:
+								document.getElementById("charge").className = "layui-tab-item layui-show";
+								document.getElementById('dishes').className = "layui-tab-item";
+								document.getElementById("cleaning").className = "layui-tab-item";
+								break;
+							default:
+								break;
+						}
+					}
+				},
+				created: function() {
+					this.findDishes();
+					this.findCleaning();
+					this.findCharges();
+				},
+				filters: {
+					dateFilter: function(value) {
+						if (!value) return '';
+						var date = moment(value).toDate();
+						return moment(date).format("YYYY-MM-DD");
+					},
+				}
+			})
+		</script>
+	</body>
+</html>

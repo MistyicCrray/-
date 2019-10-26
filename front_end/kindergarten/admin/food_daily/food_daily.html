@@ -29,7 +29,7 @@
 		<div class="x-body" id="main">
 			<div class="layui-row">
 				<div class="layui-form layui-col-md12 x-so">
-					<input type="text" v-model="inputtext.name" placeholder="菜品名称" autocomplete="off" class="layui-input">
+					<input id="dayly" placeholder="yyyy-MM-dd" placeholder="菜单日期" autocomplete="off" class="layui-input">
 					<button class="layui-btn" v-on:click="getStudent(1)"><i class="layui-icon">&#xe615;</i></button>
 				</div>
 			</div>
@@ -60,7 +60,7 @@
 						<td>{{item.lunchMoney/100}}</td>
 						<td>{{item.dinnerFood}}</td>
 						<td>{{item.dinnerMoney/100}}</td>
-						<td>{{item.createDate | dateFilter}}</td>
+						<td>{{item.dishesDate | dateFilter}}</td>
 						<td>
 							<a title="编辑" v-on:click="editP(item.id)" href="javascript:;">
 								<i class="layui-icon">&#xe642;</i>
@@ -100,6 +100,13 @@
 		<script type="text/javascript" src="../../js/moment.min.js"></script>
 		<script type="text/javascript" src="../../js/vue-main.js"></script>
 		<script>
+			layui.use('laydate', function() {
+				var laydate = layui.laydate;
+				laydate.render({
+					elem: '#dayly',
+					trigger: 'click'
+				});
+			});
 			var gender = ['男', '女'];
 			var vue = new Vue({
 				el: "#main",
@@ -118,7 +125,7 @@
 						var _this = this;
 						axios.get('/dishesDaily/find', {
 							params: {
-								name: _this.inputtext.name == "" ? null : _this.inputtext.name,
+								dishesDate: $("#dayly").val() == "" ? null : $("#dayly").val(),
 								pageNum: pageIndex,
 								size: _this.pageSize
 							}

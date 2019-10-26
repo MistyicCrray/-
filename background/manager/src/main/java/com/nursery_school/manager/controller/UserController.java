@@ -20,6 +20,7 @@ import com.nursery_school.manager.model.User;
 import com.nursery_school.manager.service.UserService;
 import com.nursery_school.manager.tools.CurrentUser;
 import com.nursery_school.manager.tools.LoginRequired;
+import com.nursery_school.manager.tools.MD5;
 import com.nursery_school.manager.tools.Result;
 import com.nursery_school.manager.tools.ResultGenerator;
 import com.nursery_school.manager.tools.TableData;
@@ -27,7 +28,7 @@ import com.nursery_school.manager.tools.TableData;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    
+
 	@Autowired
 	private UserService userService;
 
@@ -128,6 +129,23 @@ public class UserController {
 			@CurrentUser User cruse) {
 		map.put("id", id);
 		userService.updateDymic(map);
+		return ResultGenerator.genSuccessResult("修改成功");
+	}
+
+	/**
+	 * 修改密码
+	 * 
+	 * @param cruse
+	 * @return
+	 */
+	@LoginRequired(value = "0,1,2,3,4,5")
+	@RequestMapping(value = "/updatePwd/{password}/{oldP}", method = RequestMethod.POST)
+	public Result updatePwd(@PathVariable(value = "password") String password,@PathVariable(value = "oldP") String oldP, @CurrentUser User cruse) {
+		String md5 = MD5.md5(oldP);
+		if (!md5.equals(cruse.getPassword())) {
+			return ResultGenerator.genFailResult("旧密码不正确");
+		}
+		userService.updatePwd(password, cruse);
 		return ResultGenerator.genSuccessResult("修改成功");
 	}
 }

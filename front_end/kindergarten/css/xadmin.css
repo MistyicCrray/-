@@ -197,7 +197,7 @@ xblock{
     min-width: 15px;
     border: 1px solid #E2E2E2;
 }
-.page span.current{
+.page .current{
     display: inline-block;
     background: #009688 url() 0 0 no-repeat;
     color: #fff;

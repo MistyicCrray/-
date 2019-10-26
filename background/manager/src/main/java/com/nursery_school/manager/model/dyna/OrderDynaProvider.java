@@ -24,6 +24,9 @@ public class OrderDynaProvider {
 					if (map.get("payStandardId") != null) {
 						WHERE("pay_standard_id=#{payStandardId}");
 					}
+					if (map.get("state") != null) {
+						WHERE("state=#{state}");
+					}
 				}
 			}
 		}.toString();

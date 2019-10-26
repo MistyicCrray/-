@@ -9,8 +9,9 @@ public class StaffDynaProvider {
 	public String selectProvider(Map<String, Object> map) {
 		return new SQL() {
 			{
-				SELECT("*");
-				FROM("t_staff");
+				SELECT("ts.*, tu.*");
+				FROM("t_staff ts");
+				LEFT_OUTER_JOIN("t_user tu on tu.staff_id=ts.id");
 				if (map != null) {
 					if (map.get("id") != null) {
 						WHERE("id=#{id}");
@@ -21,7 +22,11 @@ public class StaffDynaProvider {
 					if (map.get("idCard") != null) {
 						WHERE("id_card=#{idCard}");
 					}
+					if (map.get("name") != null) {
+						WHERE("tu.name=#{name} or tu.contract=#{name}");
+					}
 				}
+				WHERE("ts.id=tu.staff_id");
 			}
 		}.toString();
 	}

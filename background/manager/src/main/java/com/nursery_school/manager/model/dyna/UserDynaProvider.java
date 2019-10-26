@@ -34,6 +34,9 @@ public class UserDynaProvider {
 					if (map.get("userType") != null) {
 						WHERE("user_type=#{userType}");
 					}
+					if (map.get("name") != null) {
+						WHERE("name=#{name} or tel=#{name}");
+					}
 				}
 			}
 		}.toString();

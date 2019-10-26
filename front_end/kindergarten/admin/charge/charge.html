@@ -27,14 +27,14 @@
 				<i class="layui-icon" style="line-height:30px">ဂ</i></a>
 		</div>
 		<div class="x-body" id="main">
-			<div class="layui-row">
+			<!-- <div class="layui-row">
 				<div class="layui-form layui-col-md12 x-so">
 					<input type="text" v-model="inputtext.year" placeholder="收费年限" autocomplete="off" class="layui-input">
 					<button class="layui-btn" v-on:click="getStudent(1)"><i class="layui-icon">&#xe615;</i></button>
 				</div>
-			</div>
+			</div> -->
 			<xblock>
-				<button class="layui-btn" onclick="x_admin_show('添加收费标准','charge_add.html')"><i class="layui-icon"></i>添加</button>
+				<button v-if="userType==3" class="layui-btn" onclick="x_admin_show('添加收费标准','charge_add.html')"><i class="layui-icon"></i>添加</button>
 				<span class="x-right" style="line-height:40px">共有数据：{{total}} 条</span>
 			</xblock>
 			<table class="layui-table">

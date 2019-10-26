@@ -103,4 +103,9 @@ public class UserService {
 		userMapper.updateDymic(map);
 	}
 
+	public void updatePwd(String password, User user) {
+		user.setPassword(MD5.md5(password));
+		userMapper.updateByPrimaryKey(user);
+	}
+
 }

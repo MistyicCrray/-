@@ -13,11 +13,16 @@ public class DishesDailyDynaProvider {
 				FROM("t_dishes_daily");
 				if (map != null) {
 					if (map.get("dishesDate") != null) {
-						WHERE("dishes_date=#{dishesDate}");
+						WHERE("dishes_date = str_to_date(#{dishesDate}, '%Y-%m-%d')");
 					}
 				}
 			}
 		}.toString();
+	}
+	
+	public static void main(String[] args) {
+		String s = "future star  kindergarten";
+		System.out.println(s.toUpperCase());
 	}
 
 	public String updateProvider(Map<String, Object> map) {
