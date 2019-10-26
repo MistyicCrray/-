@@ -19,11 +19,6 @@ public class DishesDailyDynaProvider {
 			}
 		}.toString();
 	}
-	
-	public static void main(String[] args) {
-		String s = "future star  kindergarten";
-		System.out.println(s.toUpperCase());
-	}
 
 	public String updateProvider(Map<String, Object> map) {
 		return new SQL() {
