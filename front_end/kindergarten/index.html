@@ -7,6 +7,7 @@
 		<script src="lib/layui/layui.all.js"></script>
 		<link rel="stylesheet" href="css/font.css">
 		<link rel="stylesheet" href="css/xadmin.css">
+		<link rel="stylesheet" href="css/globle.css">
 		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 		<script type="text/javascript" src="lib/layui/layui.js" charset="utf-8"></script>
 		<script type="text/javascript" src="js/xadmin.js"></script>
@@ -27,6 +28,44 @@
 		.layui-nav-child dd a {
 			color: white;
 		}
+
+		.SiteBrief_ed57fd7c_acfe_4703_b0e2_9709c9e6ef4e {
+			background-size: initial;
+			background-repeat: no-repeat;
+			background-position: initial;
+			background-image: url(img/jsbg1.png);
+			background-color: rgba(0, 0, 0, 0);
+			background-position-x: ;
+			background-position-y: ;
+			margin-left: 20px;
+			margin-right: 20px;
+			margin-top: 0px;
+			margin-bottom: 0px;
+			padding-left: 20px;
+			padding-right: 20px;
+			padding-top: 18px;
+			padding-bottom: 20px;
+		}
+
+		.ClassList_8c136ab4_c50b_4281_ae50_04ec2586f893 {
+			height: 200px;
+			background-size: initial;
+			background-position-x: initial;
+			background-image: url(img/download.png);
+			background-color: rgba(0, 0, 0, 0);
+			background-position-y: 13px;
+			margin-left: 20px;
+			margin-right: 20px;
+			margin-top: 0px;
+			margin-bottom: 0px;
+			padding-left: 75px;
+			padding-right: 0px;
+			padding-top: 105px;
+			padding-bottom: 0px;
+			background-repeat: no-repeat;
+		}
+
+		4
 	</style>
 	<body>
 		<div class="layui-container" id="main">
@@ -54,59 +93,80 @@
 					</div>
 				</div>
 			</div>
-			<div class="layui-col-xs10">
-				<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
-					<ul class="layui-tab-title">
-						<li class="layui-this">日常菜式</li>
-						<li>清扫计划</li>
-						<li>收费标准</li>
-						<li><a href="more/more.html">更多>></a></li>
-					</ul>
-					<div class="layui-tab-content" style="height: 100px;">
-						<div class="layui-tab-item layui-show">
-							<ul>
-								<li v-for="item in dishes">
-									<div class="class_d">
-										<a href="#" v-on:click="checkDishesDetail(item.id)">{{item.dishesDate | dateFilter}}日菜式</a>
-									</div>
-									<span style="width: 30%;">【{{item.dishesDate | dateFilter}}】</span>
-								</li>
-							</ul>
-						</div>
-						<div class="layui-tab-item">
-							<div class="layui-tab-item layui-show">
-								<ul>
-									<li v-for="item in clean">
-										<div class="class_d">
-											<a href="#" v-on:click="checkCleaningDetail(item.id)">{{item.site}}</a>
-										</div>
-										<span style="width: 30%;">【2019-09-09】</span>
-									</li>
-								</ul>
+			<div class="layui-col-xs9" style="margin-top: 10px;">
+				<div class="SiteBrief_ed57fd7c_acfe_4703_b0e2_9709c9e6ef4e">
+					<div class="introduction-list">
+						<div class="title">
+							<div class="item">
+								<a>园所介绍</a>
 							</div>
 						</div>
-						<div class="layui-tab-item">
-							<ul>
-								<li v-for="item in payStandards">
-									<div class="class_d">
-										<a href="#" v-on:click="checkChargeDetail(item.id)">{{item.year | dateFilter}}收费标准</a>
-									</div>
-								</li>
-							</ul>
+						<div class="content introduction-list-c">
+							<div class="text introduction-txtr" style="width: 100%;">
+								<p style="text-indent:32px; line-height:33px">
+									<span style="font-family: 宋体; font-size: 18px;">
+										枫林幼儿园创办于1986年，是一所具有30多年办园历史的上海市徐汇区公办二级幼儿园，园所环境整洁温馨，目前共有11个班级。
+										幼儿园以《3—6岁儿童学习与发展指南》精神为引领，努力落实“为儿童幸福和发展实施快乐的启蒙教育”，确立了
+										“顺性而育 &nbsp;乐享童年”的办园理念，致力于培养“健康活泼有自信、文明乐群善交往”的具有初步责任感的现代小公民。
+									</span>
+								</p>
+							</div>
+							<div class="clear">
+							</div>
 						</div>
 					</div>
 				</div>
+				<div class="ClassList_8c136ab4_c50b_4281_ae50_04ec2586f893">
+					<div class="content">
+					</div>
+				</div>
 			</div>
-			<div class="layui-col-xs2">
-				<ul class="layui-nav layui-nav-tree layui-inline layui-bg-blue">
-					<li class="layui-nav-item layui-nav-itemed">
-						<dl class="layui-nav-child">
-							<dd><a href="more/news_detail.html?id=one" style="color: white;" title="凝心铸师魂 立德育幼苗">凝心铸师魂 立德育幼苗</a></dd>
-							<dd><a href="more/news_detail.html?id=tow" style="color: white;" title="本园庆祝新中国成立70周年系列活动">本园庆祝新中国成立70周年系列活动</a></dd>
-							<dd><a href="more/news_detail.html?id=three" style="color: white;" title="安全工作重于泰山">安全工作重于泰山</a></dd>
-						</dl>
-					</li>
-				</ul>
+			<div class="layui-col-xs3" style="margin-top: 10px;">
+				<div style="background: url(img/news1.png);position: relative; background-size: initial;background-color: rgba(0, 0, 0, 0); padding-top: 60px;background-repeat: no-repeat;background-position: initial;">
+					<div style="margin: 10px 0 0 10px;">
+						<p style="margin-top: 10px;">
+							<a href="more/news_detail.html?id=one" title="凝心铸师魂 立德育幼苗">凝心铸师魂 立德育幼苗</a>
+						</p>
+						<p style="margin-top: 10px;">
+							<a href="more/news_detail.html?id=tow" title="本园庆祝新中国成立70周年系列活动">本园庆祝新中国成立70周年系列活动</a>
+						</p>
+						<p style="margin-top: 10px;">
+							<a href="more/news_detail.html?id=three" title="安全工作重于泰山">安全工作重于泰山</a>
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="layui-col-xs12">
+				<div class="layui-main">
+					<ul class="site-idea">
+						<li>
+							<fieldset class="layui-elem-field layui-field-title">
+								<legend><img src="img/t03.jpg" /></legend>
+								<p v-for="item in dishes">
+									<a href="#" v-on:click="checkDishesDetail(item.id)">{{item.dishesDate | dateFilter}}日菜式</a>
+									<span style="width: 30%;">【{{item.dishesDate | dateFilter}}】</span>
+								</p>
+							</fieldset>
+						</li>
+						<li>
+							<fieldset class="layui-elem-field layui-field-title">
+								<legend><img src="img/t01.jpg" /></legend>
+								<p v-for="item in clean">
+									<a href="#" v-on:click="checkCleaningDetail(item.id)">{{item.site}}</a>
+									<span style="width: 30%;">【2019-09-09】</span>
+								</p>
+							</fieldset>
+						</li>
+						<li>
+							<fieldset class="layui-elem-field layui-field-title">
+								<legend><img src="img/t04.jpg" /></legend>
+								<p v-for="item in payStandards">
+									<a href="#" v-on:click="checkChargeDetail(item.id)">{{item.year | dateFilter}}收费标准</a>
+								</p>
+							</fieldset>
+						</li>
+					</ul>
+				</div>
 			</div>
 			<div class="layui-col-xs12">
 				<div class="layui-form-item">

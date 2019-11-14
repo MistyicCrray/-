@@ -34,7 +34,7 @@
 				</div>
 			</div> -->
 			<xblock>
-				<button v-if="userType==3" class="layui-btn" onclick="x_admin_show('添加收费标准','charge_add.html')"><i class="layui-icon"></i>添加</button>
+				<button v-if="userType=='3'" class="layui-btn" onclick="x_admin_show('添加收费标准','charge_add.html')"><i class="layui-icon"></i>添加</button>
 				<span class="x-right" style="line-height:40px">共有数据：{{total}} 条</span>
 			</xblock>
 			<table class="layui-table">
@@ -54,10 +54,10 @@
 				<tbody>
 					<tr v-for="item,index in payStandards">
 						<td>{{index + 1}}</td>
-						<td>{{item.schooling/100}}</td>
-						<td>{{item.bookMoney/100}}</td>
-						<td>{{item.boardAges/100}}</td>
-						<td>{{item.quarterage/100}}</td>
+						<td>{{item.schooling/100}}元</td>
+						<td>{{item.bookMoney/100}}元</td>
+						<td>{{item.boardAges/100}}元</td>
+						<td>{{item.quarterage/100}}元</td>
 						<td>{{item.year | dateFilter}}</td>
 						<td>{{item.paymentDeadline | dateFilter}}</td>
 						<td><a href="javascript:;" v-on:click="check_file(item.file)">点击预览收费标准文件</a></td>
@@ -114,7 +114,7 @@
 					pageNum: 1,
 					inputtext: {},
 					editInp: {},
-					userType: localStorage.getItem('userType')
+					userType: sessionStorage.getItem('userType')
 				},
 				methods: {
 					getStudent: function(pageIndex) {
