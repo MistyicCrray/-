@@ -37,18 +37,18 @@
 			selectByExampleQueryId="false"></table> -->
 
 		<javaModelGenerator targetPackage="com.nursery_school.manager.model"
-			targetProject="E:/workspace/manager/src/main/java">
+			targetProject="E:/generator/-/background/manager/src/main/java">
 			<property name="enableSubPackages" value="true" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 
 		<sqlMapGenerator targetPackage="com.nursery_school.manager.model"
-			targetProject="E:/workspace/manager/src/main/java">
+			targetProject="E:/generator/-/background/manager/src/main/java">
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 
 		<javaClientGenerator type="ANNOTATEDMAPPER"
-			targetPackage="com.nursery_school.manager.mapper" targetProject="E:/workspace/manager/src/main/java">
+			targetPackage="com.nursery_school.manager.mapper" targetProject="E:/generator/-/background/manager/src/main/java">
 			<property name="enableSubPackages" value="false" />
 		</javaClientGenerator>
 		<!-- <table tableName="t_user" domainObjectName="User" enableCountByExample="false" 
@@ -60,9 +60,9 @@
 		<!-- <table tableName="t_order" domainObjectName="Order" enableCountByExample="false" 
 			enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" 
 			selectByExampleQueryId="false"></table> -->
-		<table tableName="t_pay_standard" domainObjectName="PayStandard" enableCountByExample="false" 
+		<!-- <table tableName="t_pay_standard" domainObjectName="PayStandard" enableCountByExample="false" 
 			enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" 
-			selectByExampleQueryId="false"></table>
+			selectByExampleQueryId="false"></table> -->
 		<!-- <table tableName="t_cleaning" domainObjectName="Cleaning" enableCountByExample="false" 
 			enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" 
 			selectByExampleQueryId="false"></table> -->
@@ -81,10 +81,24 @@
 		<!-- <table tableName="t_dishes" domainObjectName="Dishes" enableCountByExample="false" 
 			enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" 
 			selectByExampleQueryId="false"></table> -->
-<!-- 		<table tableName="t_dishes_daily" domainObjectName="DishesDaily"
+		<!-- <table tableName="t_dishes_daily" domainObjectName="DishesDaily" enableCountByExample="false" 
+			enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" 
+			selectByExampleQueryId="false"></table> -->
+		<table tableName="t_project" domainObjectName="Project"
 			enableCountByExample="false" enableUpdateByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
-			selectByExampleQueryId="false"></table> -->
-
+			selectByExampleQueryId="false"></table>
+		<table tableName="t_project_student" domainObjectName="ProjectStudent"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false"></table>
+		<table tableName="t_activity" domainObjectName="Activity"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false"></table>
+		<table tableName="t_activity_student" domainObjectName="ActivityStudent"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false"></table>
 	</context>
 </generatorConfiguration>  

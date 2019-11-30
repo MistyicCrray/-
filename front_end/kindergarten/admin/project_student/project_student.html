@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+		<link rel="stylesheet" href="../../css/font.css">
+		<link rel="stylesheet" href="../../css/xadmin.css">
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/xadmin.js"></script>
+	</head>
+
+	<body>
+		<div class="x-nav">
+			<span class="layui-breadcrumb">
+				<a href="">首页</a>
+				<a href="">学生课程管理</a>
+				<a>
+					<cite>学生课程管理</cite>
+				</a>
+			</span>
+			<a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);"
+			 title="刷新">
+				<i class="layui-icon" style="line-height:30px">ဂ</i></a>
+		</div>
+		<div class="x-body" id="main">
+			<xblock>
+				<button class="layui-btn" onclick="x_admin_show('添加学生课程','project_student_add.html')"><i class="layui-icon"></i>添加学生课程</button>
+				<span class="x-right" style="line-height:40px">共有数据：{{total}} 条</span>
+			</xblock>
+			<table class="layui-table">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>课程名称</th>
+						<th>学生姓名</th>
+						<th>上课老师</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="item,index in childrens">
+						<td>{{index + 1}}</td>
+						<td>{{item.project.name}}</td>
+						<td>{{item.student.name}}</td>
+						<td>{{item.staff.user.name}}</td>
+						<td>
+							<a title="删除" v-on:click="deleteU(item.id)" href="javascript:;">
+								<i class="layui-icon">&#xe640;</i>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="page">
+				<a class="prev" href="javascript:void(0)" v-on:click="prePage">&lt;&lt;</a>
+				<template v-for="(item,index) in pages">
+					<template v-if="pageNum!=2&&pages!=2&&pages!=1 && pageNum==1 && item<pageNum+5 && item>pageNum-5">
+						<a href="javascript:void(0)" v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
+					</template>
+					<template v-if="pageNum==2 && item<pageNum+4 && item>pageNum-4">
+						<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
+					</template>
+					<template v-if="pageNum>2 && item<pageNum+3 && item>pageNum-3 && pageNum<pages-1">
+						<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
+					</template>
+					<template v-if="pageNum!=2&&pageNum==pages-1 && item>pageNum-4">
+						<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
+					</template>
+					<template v-if="pageNum!=2&&pageNum==pages && item>pageNum-5">
+						<a v-bind:class="{ 'current': pageNum == item}" href="javascript:void(0)" v-on:click="pageClick(item)">{{item}}</a>
+					</template>
+				</template>
+				<a class="next" href="javascript:void(0)" v-on:click="nextPage">&gt;&gt;</a>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/vue-2.5.17.min.js"></script>
+		<script type="text/javascript" src="../../js/axios-0.18.min.js"></script>
+		<script type="text/javascript" src="../../js/moment.min.js"></script>
+		<script type="text/javascript" src="../../js/vue-main.js"></script>
+		<script>
+			var vue = new Vue({
+				el: "#main",
+				data: {
+					childrens: "",
+					inputtext: {},
+					editInp: {},
+					pageSize: 5,
+					total: 0,
+					pages: 0,
+					pageNum: 1,
+				},
+				methods: {
+					getStudent: function(pageIndex) {
+						pageIndex = isNaN(pageIndex) ? 1 : pageIndex;
+						var _this = this;
+						axios.get('/projectStudent/find', {
+							params: {
+								pageNum: pageIndex,
+								size: _this.pageSize
+							}
+						}).then(function(res) {
+							console.info(res);
+							if (res.status == 202) {
+								alert("无权访问");
+								return;
+							}
+							_this.childrens = res.data.data.rows;
+							_this.pageNum = pageIndex;
+							_this.total = res.data.data.total;
+							_this.pages = Math.ceil(_this.total / _this.pageSize);
+						})
+					},
+					pageClick: function(page) {
+						this.getStudent(page);
+					},
+					prePage: function() {
+						this.pageNum--;
+						if (this.pageNum < 1) {
+							this.pageNum = 1;
+							return;
+						}
+						this.getStudent(this.pageNum);
+					},
+					nextPage: function() {
+						this.pageNum++;
+						if (this.pageNum > this.pages) {
+							this.pageNum = this.pages;
+							return;
+						}
+						this.getStudent(this.pageNum);
+					},
+					logout: function() {
+						logout();
+						location.href = "login.html";
+					},
+					findChil: function(id) {
+						layer.open({
+							type: 2,
+							title: '清扫条目信息',
+							shadeClose: true,
+							closeBtn: 1,
+							scrollbar: true,
+							area: ['100%', '100%'],
+							content: ['cleanInfo/cleanInfo.html?id=' + id],
+						})
+					},
+					deleteU: function(id) {
+						var _this = this;
+						layer.confirm("是否删除该条目？", {
+							btn: ['确认', '取消'] //按钮
+						}, function() {
+							axios.post('/projectStudent/delete/' + id).then(function(res) {
+								if (res.data.code == 200) {
+									layer.alert('删除成功', {
+										icon: 6
+									});
+									_this.getStudent(1);
+								} else {
+									layer.alert(res.data.message, {
+										icon: 5
+									});
+								}
+							});
+						});
+					},
+					editP: function(id) {
+						var _this = this;
+						layer.open({
+							type: 2,
+							title: '修改清扫计划信息',
+							shadeClose: true,
+							closeBtn: 1,
+							scrollbar: true,
+							area: ['600px', '400px'],
+							content: ['project_student_edit.html?id=' + id],
+							end: function() {
+								_this.getStudent();
+							}
+						})
+					},
+					findInfo: function(id) {
+						var _this = this;
+						layer.open({
+							type: 2,
+							title: '修改清扫计划信息',
+							shadeClose: true,
+							closeBtn: 1,
+							scrollbar: true,
+							area: ['600px', '400px'],
+							content: ['project_student_edit.html?id=' + id],
+							end: function() {
+								_this.getStudent();
+							}
+						})
+					},
+				},
+				created: function() {
+					this.getStudent();
+				},
+				filters: {
+					dateFilter: function(value) {
+						if (!value) return '';
+						var date = moment(value).toDate();
+						return moment(date).format("YYYY-MM-DD");
+					},
+					optStatusFilter: function(value) {
+						return gender[value];
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

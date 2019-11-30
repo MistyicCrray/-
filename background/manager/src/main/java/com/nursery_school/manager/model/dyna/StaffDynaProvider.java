@@ -25,8 +25,10 @@ public class StaffDynaProvider {
 					if (map.get("name") != null) {
 						WHERE("tu.name=#{name} or tu.contract=#{name}");
 					}
+					if (map.get("type") != null) {
+						WHERE("tu.user_type=#{type}");
+					}
 				}
-				WHERE("ts.id=tu.staff_id");
 			}
 		}.toString();
 	}

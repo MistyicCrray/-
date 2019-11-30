@@ -35,10 +35,8 @@ public class StudentsController {
 	@Autowired
 	private StudentService studentService;
 
-	@LoginRequired(value = "3")
 	@RequestMapping(value = "/findByDyna", method = RequestMethod.GET)
-	public Result findByDyna(@RequestParam(required = false) Map<String, Object> map, Integer pageNum, Integer size,
-			@CurrentUser User user) {
+	public Result findByDyna(@RequestParam(required = false) Map<String, Object> map, Integer pageNum, Integer size) {
 		Page<Student> page = PageHelper.startPage(pageNum == null ? 1 : pageNum, size == null ? 5 : size);
 		List<Student> findByDyna = studentService.findByDyna(map);
 		return ResultGenerator.genSuccessResult(new TableData<Student>(page.getTotal(), findByDyna));

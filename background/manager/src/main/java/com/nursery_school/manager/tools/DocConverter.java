@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import com.artofsolving.jodconverter.DocumentConverter;
 import com.artofsolving.jodconverter.openoffice.connection.OpenOfficeConnection;
 import com.artofsolving.jodconverter.openoffice.connection.SocketOpenOfficeConnection;
@@ -19,6 +21,9 @@ public class DocConverter {
 	private File pdfFile;
 	private File swfFile;
 	private File docFile;
+
+	@Value("${doc.conver}")
+	private String docConverPath;
 
 	public DocConverter(String fileString) {
 		ini(fileString);
@@ -48,17 +53,14 @@ public class DocConverter {
 	private void doc2pdf() throws Exception {
 		if (docFile.exists()) {
 			if (!pdfFile.exists()) {
-				OpenOfficeConnection connection = new SocketOpenOfficeConnection(
-						8100);
+				OpenOfficeConnection connection = new SocketOpenOfficeConnection(8100);
 				try {
 					connection.connect();
-					DocumentConverter converter = new OpenOfficeDocumentConverter(
-							connection);
+					DocumentConverter converter = new OpenOfficeDocumentConverter(connection);
 					converter.convert(docFile, pdfFile);
 					// close the connection
 					connection.disconnect();
-					System.out.println("****pdf转换成功，PDF输出：" + pdfFile.getPath()
-							+ "****");
+					System.out.println("****pdf转换成功，PDF输出：" + pdfFile.getPath() + "****");
 				} catch (java.net.ConnectException e) {
 					// ToDo Auto-generated catch block
 					e.printStackTrace();
@@ -92,14 +94,11 @@ public class DocConverter {
 				{
 					try {
 						// 这里根据SWFTools安装路径需要进行相应更改 修改2
-						Process p = r.exec("E://swftools/pdf2swf.exe "
-								+ pdfFile.getPath() + " -o "
-								+ swfFile.getPath() + " -T 9");
+						Process p = r.exec(docConverPath + pdfFile.getPath() + " -o " + swfFile.getPath() + " -T 9");
 						System.out.print(loadStream(p.getInputStream()));
 						System.err.print(loadStream(p.getErrorStream()));
 						System.out.print(loadStream(p.getInputStream()));
-						System.err.println("****swf转换成功，文件输出："
-								+ swfFile.getPath() + "****");
+						System.err.println("****swf转换成功，文件输出：" + swfFile.getPath() + "****");
 						if (pdfFile.exists()) {
 							pdfFile.delete();
 						}
@@ -110,12 +109,10 @@ public class DocConverter {
 				} else if (environment == 2)// linux环境处理
 				{
 					try {
-						Process p = r.exec("pdf2swf " + pdfFile.getPath()
-								+ " -o " + swfFile.getPath() + " -T 9");
+						Process p = r.exec("pdf2swf " + pdfFile.getPath() + " -o " + swfFile.getPath() + " -T 9");
 						System.out.print(loadStream(p.getInputStream()));
 						System.err.print(loadStream(p.getErrorStream()));
-						System.err.println("****swf转换成功，文件输出："
-								+ swfFile.getPath() + "****");
+						System.err.println("****swf转换成功，文件输出：" + swfFile.getPath() + "****");
 						if (pdfFile.exists()) {
 							pdfFile.delete();
 						}
@@ -194,8 +191,7 @@ public class DocConverter {
 	public void setOutputPath(String outputPath) {
 		this.outputPath = outputPath;
 		if (!outputPath.equals("")) {
-			String realName = fileName.substring(fileName.lastIndexOf("/"),
-					fileName.lastIndexOf("."));
+			String realName = fileName.substring(fileName.lastIndexOf("/"), fileName.lastIndexOf("."));
 			if (outputPath.charAt(outputPath.length()) == '/') {
 				swfFile = new File(outputPath + realName + ".swf");
 			} else {
