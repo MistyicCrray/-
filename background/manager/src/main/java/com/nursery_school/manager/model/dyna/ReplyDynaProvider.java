@@ -7,6 +7,7 @@ import org.apache.ibatis.jdbc.SQL;
 public class ReplyDynaProvider {
 
 	public String selectProvider(Map<String, Object> map) {
+		System.out.println(map);
 		return new SQL() {
 			{
 				SELECT("*");
@@ -15,8 +16,8 @@ public class ReplyDynaProvider {
 					if (map.get("id") != null) {
 						WHERE("id=#{id}");
 					}
-					if (map.get("communuicationId") != null) {
-						WHERE("communication_id=#{communuicationId}");
+					if (map.get("communicationId") != null) {
+						WHERE("communication_id=#{communicationId}");
 					}
 					if (map.get("toUserId") != null) {
 						WHERE("to_user_id=#{toUserId}");

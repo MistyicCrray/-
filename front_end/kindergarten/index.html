@@ -117,7 +117,10 @@
 					</div>
 				</div>
 				<div class="ClassList_8c136ab4_c50b_4281_ae50_04ec2586f893">
-					<div class="content">
+					<div class="content" style="margin: 20px 0 0 30px;">
+						<div  v-for="item in projects">
+							{{item.name}}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -210,7 +213,8 @@
 					},
 					dishes: [],
 					clean: [],
-					payStandards: []
+					payStandards: [],
+					projects: []
 				},
 				methods: {
 					login: function() {
@@ -251,6 +255,13 @@
 						axios.get('/dishesDaily/find').then(function(res) {
 							console.info(res);
 							_this.dishes = res.data.data.rows;
+						})
+					},
+					findProject: function() {
+						var _this = this;
+						axios.get('/project/find').then(function(res) {
+							console.info(res);
+							_this.projects = res.data.data.rows;
 						})
 					},
 					checkDishesDetail: function(id) {
@@ -305,6 +316,7 @@
 					this.findDishes();
 					this.findCleaning();
 					this.findCharges();
+					this.findProject();
 					this.$nextTick(function() {
 						layui.use(['carousel', 'form'], function() {
 							var carousel = layui.carousel,
