@@ -85,7 +85,7 @@ public class ParentsController {
 	@RequestMapping(value = "/updateParents/{pid}", method = RequestMethod.POST)
 	public Result updateParents(@RequestBody Map<String, Object> map, @PathVariable(value = "pid") String pid) {
 		map.put("id", pid);
-		map.put("password", "");
+		map.put("password", null);
 		parentService.update(map);
 		return ResultGenerator.genSuccessResult();
 	}

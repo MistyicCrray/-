@@ -35,7 +35,7 @@ public class UserDynaProvider {
 						WHERE("user_type=#{userType}");
 					}
 					if (map.get("name") != null) {
-						WHERE("name=#{name} or tel=#{name}");
+						WHERE("name=#{name} or contract=#{name}");
 					}
 				}
 			}

@@ -83,7 +83,9 @@ public class ParentService {
 	public void update(Map<String, Object> map) {
 		parentsMapper.update(map);
 		map.put("id", null);
-		List<User> findByDymic = userMapper.findByDymic(map);
+		Map<String, Object> userMap = new HashMap<String, Object>();
+		userMap.put("parentId", map.get("parentId"));
+		List<User> findByDymic = userMapper.findByDymic(userMap);
 		if (findByDymic.size() != 0) {
 			map.put("id", findByDymic.get(0).getId());
 			userMapper.updateDymic(map);
